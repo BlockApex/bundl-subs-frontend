@@ -1,3 +1,4 @@
+import { Sparkle } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -55,8 +56,8 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
 
       <div className="w-full flex items-baseline justify-between mt-4">
         <div>
-          <p className={`text-base font-normal ${textColor}`}>
-            ${bundle.price} /mo
+          <p className={`text-base font-normal flex items-center gap-2 ${textColor}`}>
+            <Sparkle size={16} /> ${bundle.price} /mo
           </p>
           <small className={`${textColor}`}>
             Save ${bundle.savings} ({bundle.percent}%)
