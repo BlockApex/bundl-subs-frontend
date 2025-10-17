@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 const Container: React.FC<ContainerProps> = ({ children }) => {
     return (
-        <main className='max-w-full lg:max-w-4xl mx-auto bg-white p-4 relative pb-32'>
+        <main className='max-w-full lg:max-w-3xl mx-auto bg-white  relative'>
             {children}
         </main>
     )

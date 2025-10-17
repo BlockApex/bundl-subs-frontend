@@ -17,6 +17,7 @@
 
   --foreground: #90a1b9;
   --dark: #001f3e;
+  --dark-50:#2D3C59;
   --black: black;
   --background: #ffffff;
 
@@ -43,6 +44,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-dark: var(--dark);
+  --color-dark-50:var(--dark-50);
   --color-black: var(--black);
 
 }

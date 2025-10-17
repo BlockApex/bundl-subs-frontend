@@ -1,5 +1,6 @@
-import { Sparkle } from "lucide-react";
+import { ChevronRight, Sparkle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface BundleCardProps {
@@ -22,10 +23,17 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
   const bgColor = bundle.dark ? "bg-secondary-dark" : "bg-primary-dark";
   const textColor = bundle.dark ? "text-black" : "text-white";
   const borderColor = bundle.dark ? "border-black" : "border-white";
-  const shadow = bundle.dark ? "shadow-[0px_18px_34.5px_0px_#FFBD1554]" : "shadow-[0px_15px_28px_0px_#9DFFF4]";
+  const shadow = bundle.dark
+    ? "shadow-[0px_18px_34.5px_0px_#FFBD1554]"
+    : "shadow-[0px_15px_28px_0px_#9DFFF4]";
+
+  // ⬅️ Chevron opposite color scheme
+  const chevronBg = bundle.dark ? "bg-primary-dark" : "bg-secondary";
+  const chevronColor = bundle.dark ? "text-white" : "text-black";
+
   return (
     <div
-      className={`w-full h-auto p-4 rounded-xl ${shadow}  ${bgColor}`}
+      className={`w-full h-auto p-4 rounded-xl ${shadow} ${bgColor}`}
     >
       <h5 className={`text-xl font-medium ${textColor}`}>{bundle.title}</h5>
 
@@ -33,9 +41,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
         {visibleItems.map((item, i) => (
           <div
             key={i}
-            className={`${
-              i !== 0 ? "-ml-3" : ""
-            } w-10 h-10 rounded-full border-2 ${borderColor} overflow-hidden`}
+            className={`${i !== 0 ? "-ml-3" : ""} w-10 h-10 rounded-full border-2 ${borderColor} overflow-hidden`}
           >
             <Image
               src={item.image}
@@ -59,10 +65,17 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
           <p className={`text-base font-normal flex items-center gap-2 ${textColor}`}>
             <Sparkle size={16} /> ${bundle.price} /mo
           </p>
-          <small className={`${textColor}`}>
+          <small className={textColor}>
             Save ${bundle.savings} ({bundle.percent}%)
           </small>
         </div>
+        <Link href='/bundles/1' >
+          <span
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${chevronBg}`}
+          >
+            <ChevronRight className={`transform rotate-300 ${chevronColor}`} />
+          </span>
+        </Link>
       </div>
     </div>
   );

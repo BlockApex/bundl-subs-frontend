@@ -79,7 +79,7 @@ const FeaturedBundles = () => {
         <div className='w-full h-auto relative p-2'>
             <div className='flex items-center justify-between'>
                 <p className='text-base text-foreground font-normal '>Featured Bundles</p>
-                <Link href='/' className='text-base text-primary '>See All</Link>
+                <Link href='/bundles' className='text-base text-primary '>See All</Link>
             </div>
             <div className='flex flex-col gap-8 mt-4'>
                 {data.map((b, i) => {

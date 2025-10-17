@@ -5,8 +5,8 @@ import FeaturedBundles from "./components/FeaturedBundles";
 export default function Home() {
   return (
     <AppLayout>
-      <main className="w-full min-h-screen relative overflow-hidden">
-        <span className="mt-20 block" />
+      <main className="w-full min-h-screen relative overflow-hidden px-0 lg:px-4">
+        {/* <span className="mt-20 block" /> */}
         <FeaturedBundles />
         <br />
         {/* <br /> */}

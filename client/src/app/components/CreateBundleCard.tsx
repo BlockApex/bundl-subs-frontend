@@ -14,7 +14,7 @@ const CreateBundleCard = () => {
             <p className='text-base text-foreground mt-1'>
                 Bundle your favorite subscriptions. The more you bundle, the more you save.
             </p>
-            <Link href='/' className='text-base text-primary flex items-center gap-2 mt-4'>Get Started <ArrowRight size={16} /> </Link>
+            <Link href='/create' className='text-base text-primary flex items-center gap-2 mt-4'>Get Started <ArrowRight size={16} /> </Link>
         </div>
     )
 }
