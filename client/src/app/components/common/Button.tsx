@@ -38,7 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
                         variant === "primary",
                     "bg-dark text-white hover:bg-dark/90 hover:text-white border-dark hover:border hover:border-dark active:bg-dark/80":
                         variant === "dark",
-                    "bg-gray-200 text-dark hover:bg-gray-300 active:bg-gray-500":
+                    "bg-secondary text-black hover:bg-secondary/70 active:bg-secondary/80":
                         variant === "secondary",
                     "bg-red-700 text-white hover:bg-red-600 active:bg-red-700":
                         variant === "danger",

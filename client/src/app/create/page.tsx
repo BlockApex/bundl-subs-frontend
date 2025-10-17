@@ -9,12 +9,13 @@ const CreateBundlePage = () => {
 
     return (
         <AppLayout showTopbar={false}>
-            <main className="w-full min-h-screen relative overflow-hidden">
+            <main className="w-full min-h-screen relative overflow-hidden pb-12">
                 {formScreen ? (
-                    <MakeBundle />
+                    <MakeBundle onClick={() => setFormScreen(false)} />
                 ) : (
                     <Plans onClick={() => setFormScreen(true)} />
                 )}
+
             </main>
         </AppLayout>
     )
