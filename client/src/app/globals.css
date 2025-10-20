@@ -93,3 +93,24 @@ button {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.wallet_button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* same as gap-2 */
+  padding: 0.5rem 1rem; /* same as py-2 px-4 */
+  background-color: var(
+    --primary-dark,
+    #0d9488
+  ) !important; /* fallback color */
+  border-radius: 0.5rem; /* same as rounded-lg */
+  color: white;
+  font-weight: 600; /* same as font-semibold */
+  box-shadow: 0px 15px 28px 0px #9dfff4;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.wallet_button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

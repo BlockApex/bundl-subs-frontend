@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Container from "./components/common/Container";
+import { SolanaWalletProvider } from './providers';
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from 'react-hot-toast';
+
+
 
 // Load Poppins (for headings)
 const poppins = Poppins({
@@ -50,9 +55,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased font-body`}>
-        <Container>
-          {children}
-        </Container>
+        <NextTopLoader color="#00d5be" height={5} />
+        <SolanaWalletProvider>
+          <Container>
+            {children}
+          </Container>
+        </SolanaWalletProvider>
+        <Toaster />
       </body>
     </html>
   );

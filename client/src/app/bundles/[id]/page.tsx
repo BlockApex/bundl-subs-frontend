@@ -1,4 +1,3 @@
-import AppLayout from '@/app/components/common/AppLayout'
 import { Button } from '@/app/components/common/Button'
 import BundleServices from '@/app/components/details/BundleServices'
 import BundleDetailHeader from '@/app/components/details/Header'

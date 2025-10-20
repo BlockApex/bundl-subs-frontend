@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Input from "../common/Input";
 import Image from "next/image";
 import { Button } from "../common/Button";
+import TierModal from "./TierModal";
 
 const categories = [
     { id: 1, label: "All" },
@@ -87,6 +88,7 @@ interface MakeBundleProps {
 const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState(categories[0]);
+    const [tierOpen, setTierOpen] = useState(false)
 
     return (
         <div className="w-full h-auto relative">
@@ -170,7 +172,7 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                                     <button className="text-foreground absolute top-4 right-4">
                                         <ChevronRight size={20} />
                                     </button>
-                                    <button className="p-1 bg-dark rounded-md absolute bottom-4 right-4">
+                                    <button onClick={() => setTierOpen(true)} className="p-1 bg-dark rounded-md absolute bottom-4 right-4">
                                         <Plus size={15} className="text-white" />
                                     </button>
                                 </div>
@@ -179,7 +181,6 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                     )
                 })}
             </section>
-
             <section className='w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center fixed bottom-0 left-0 right-0 p-2'>
                 <div className='w-full max-w-[100%] bg-dark p-2 rounded-xl flex items-center justify-between'>
                     <div className="flex items-center gap-2 p-4">
@@ -199,6 +200,7 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                     </div>
                 </div>
             </section>
+            <TierModal open={tierOpen} setOpen={setTierOpen} />
         </div>
     );
 };

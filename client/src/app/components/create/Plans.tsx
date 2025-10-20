@@ -70,7 +70,7 @@ const Plans: React.FC<PlansProps> = ({ onClick }) => {
                         <div className='flex flex-col gap-2'>
                             <h6 className='text-lg font-normal text-black mb-0 flex items-center gap-2'>🔒 Privacy-first:</h6>
                             <p className='text-sm text-black font-normal p-0 my-0'>
-                                Your identity isn't directly linked to your wallet. We use advanced privacy tech to keep your data secure.
+                                Your identity isn&apos;t directly linked to your wallet. We use advanced privacy tech to keep your data secure.
                             </p>
                         </div>
                     </div>

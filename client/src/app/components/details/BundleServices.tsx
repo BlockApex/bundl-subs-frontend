@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, Sparkle } from "lucide-react";
+import { Sparkle } from "lucide-react";
 
 export const subscriptions = [
     {
