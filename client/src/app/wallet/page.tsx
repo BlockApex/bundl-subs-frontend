@@ -1,10 +1,21 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import AppLayout from '../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
+import { getProfile } from '../services/auth.service'
 
 
 
-const ActiveBundles = () => {
+const WalletPage = () => {
+
+    const getProfileData = async () => {
+        const response = await getProfile();
+        console.log(response)
+    }
+    useEffect(() => {
+        getProfileData();
+    }, [])
+
     return (
         <AppLayout>
             <main className="w-full min-h-screen relative overflow-hidden p-4">
@@ -72,4 +83,4 @@ const ActiveBundles = () => {
     )
 }
 
-export default ActiveBundles
+export default WalletPage
