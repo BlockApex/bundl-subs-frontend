@@ -1,6 +1,6 @@
-import AppLayout from "./components/common/AppLayout";
-import CreateBundleCard from "./components/CreateBundleCard";
-import FeaturedBundles from "./components/FeaturedBundles";
+import AppLayout from "../components/common/AppLayout";
+import CreateBundleCard from "../components/CreateBundleCard";
+import FeaturedBundles from "../components/FeaturedBundles";
 
 export default function Home() {
   return (

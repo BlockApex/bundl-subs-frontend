@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect } from 'react'
-import AppLayout from '../components/common/AppLayout'
+import AppLayout from '../../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
-import { getProfile } from '../services/auth.service'
+import { getProfile } from '../../services/auth.service'
 
 
 

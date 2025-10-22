@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from 'react'
-import AppLayout from '../components/common/AppLayout'
-import Plans from '../components/create/Plans'
-import MakeBundle from '../components/create/MakeBundle'
+import AppLayout from '../../components/common/AppLayout'
+import Plans from '../../components/create/Plans'
+import MakeBundle from '../../components/create/MakeBundle'
 
 const CreateBundlePage = () => {
     const [formScreen, setFormScreen] = useState(true);

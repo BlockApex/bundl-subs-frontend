@@ -1,6 +1,6 @@
 import React from 'react'
-import AppLayout from '../components/common/AppLayout'
-import BundleCard from '../components/BundleCard'
+import AppLayout from '../../components/common/AppLayout'
+import BundleCard from '../../components/BundleCard'
 
 
 

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "./globals.css";
-import Container from "./components/common/Container";
-import { SolanaWalletProvider } from './providers';
+import "../globals.css";
+import Container from "../components/common/Container";
+import { SolanaWalletProvider } from '../providers';
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
 

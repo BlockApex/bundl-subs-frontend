@@ -6,6 +6,8 @@
   --primary: #00d5be;
   --primary-dark: #119576;
   --primary-50: #00bba733;
+  --primary-web:#F6754F;
+  --foreground-web:#364153;
 
   --secondary: #ffc107;
   --secondary-dark: #ffbd15;
@@ -32,6 +34,9 @@
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
   --color-primary-50: var(--primary-50);
+
+  --color-primary-web: var(--primary-web);
+  --color-foreground-web: var(--foreground-web);
 
   --color-secondary: var(--secondary);
   --color-secondary-dark: var(--secondary-dark);
@@ -113,4 +118,34 @@ button {
 .wallet_button:hover {
   opacity: 0.9;
   transform: translateY(-1px);
+}
+
+
+
+
+@keyframes marquee-smooth {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-smooth {
+  animation: marquee-smooth 4s linear infinite;
+  display: flex;
+  width: fit-content;
+}
+
+
+
+.section {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
 }
