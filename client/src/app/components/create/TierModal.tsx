@@ -12,7 +12,7 @@ interface TierModalProps {
 }
 
 const TierModal: React.FC<TierModalProps> = ({ open, setOpen, service, onSelectPackage }) => {
-  const [selectedTier] = useState<string | null>(null);
+const [selectedTier] = useState<string | null>(null);
 
   if (!service) return null;
 

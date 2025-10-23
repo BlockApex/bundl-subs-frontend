@@ -86,49 +86,61 @@ const How = () => {
   const textRefs = useRef<HTMLDivElement[]>([]);
   const imageRefs = useRef<HTMLDivElement[]>([]);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // Hide all except first
-      textRefs.current.forEach((el, i) => {
-        if (i !== 0) gsap.set(el, { autoAlpha: 0 });
-      });
-      imageRefs.current.forEach((el, i) => {
-        if (i !== 0) gsap.set(el, { autoAlpha: 0 });
-      });
+useLayoutEffect(() => {
+  const ctx = gsap.context(() => {
+    // Set all items invisible except the first
+    textRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
+    imageRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: `+=${steps.length * 100}%`,
-          scrub: 1,
-          pin: true,
-        },
-      });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: `+=${steps.length * 100}%`, // smoother progression
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
 
-      steps.forEach((_, i) => {
-        if (i === 0) return;
+    steps.forEach((_, i) => {
+      if (i === 0) return;
 
-        tl.to([textRefs.current[i - 1], imageRefs.current[i - 1]], { autoAlpha: 0, duration: 0.5 })
-          .to([textRefs.current[i], imageRefs.current[i]], { autoAlpha: 1, duration: 0.5 }, "<");
-      });
-    }, containerRef);
+      // Keep overlap so nothing disappears completely
+      tl.to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
+        autoAlpha: 0.4, // keep slightly visible before switching
+        duration: 0.5,
+        ease: "power2.inOut",
+      })
+        .to([textRefs.current[i], imageRefs.current[i]], {
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: "power2.inOut",
+        }, "<0.1") // slight overlap for smooth crossfade
+        .to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
+          autoAlpha: 0, // fully fade out *after* next is visible
+          duration: 0.3,
+          ease: "power1.inOut",
+        }, ">-0.2");
+    });
+  }, containerRef);
 
-    return () => ctx.revert();
-  }, []);
+  return () => ctx.revert();
+}, []);
+
 
   return (
     <div className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4 hidden lg:block'>
-            <section className='w-full flex flex-col lg:flex-row items-start lg:items-center justify-between'>
-               <h1 className='text-3xl lg:text-5xl font-normal text-black'>
+      <section className='w-full flex flex-col lg:flex-row items-start lg:items-center justify-between'>
+        <h1 className='text-3xl lg:text-5xl font-normal text-black'>
           How Bundl Works
         </h1>
-        <div className="flex flex-col items-start lg:items-center gap-4">
+        <div className="flex flex-col  lg:flex-row items-start lg:items-center gap-4">
           <p className="text-base text-foreground-web">
             No new Accounts, Just your Wallet
           </p>
           <Image src='/assets/landing/how/icons.svg' alt="icons" width={100} height={80} />
-          <br className="block lg:hidden"/>
+          <br className="block lg:hidden" />
           <Button>
             Connect Now
           </Button>

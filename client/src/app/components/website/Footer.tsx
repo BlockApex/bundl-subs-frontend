@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Footer = () => {
@@ -12,9 +13,12 @@ const Footer = () => {
                         <h2 className='text-3xl text-primary-web font-semibold'>Bundl</h2>
                     </section>
                     <div className="flex items-center gap-3 mt-2">
-                        <Image src="/assets/landing/social/1.svg" alt="X" width={50} height={50} />
-                        <Image src="/assets/landing/social/2.svg" alt="Instagram" width={50} height={50} />
-                        <Image src="/assets/landing/social/3.svg" alt="LinkedIn" width={50} height={50} />
+                        <Link href='https://x.com/bundlsubs' target="_blank">
+                            <Image src="/assets/landing/social/1.svg" alt="X" width={50} height={50} />
+                        </Link>
+                        <Link href='https://www.legends.fun/leaderboard/b140c1ee-85a8-44b0-b25b-9a636392f887?category=99e83efb-d648-45d9-a20c-b6de26d475b3' target="_blank">
+                            <Image src="/assets/landing/social/2.svg" alt="Instagram" width={50} height={50} />
+                        </Link>
                     </div>
                 </div>
 
@@ -22,38 +26,38 @@ const Footer = () => {
                 <div>
                     <h4 className="font-semibold text-black mb-3">Home</h4>
                     <ul className="flex flex-col gap-2 text-base mt-4">
-                        <li>Features</li>
-                        <li>How it Works</li>
-                        <li>Merchant</li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Features</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">How it Works</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Merchant</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 className="font-semibold text-black mb-3">Support</h4>
                     <ul className="flex flex-col gap-2 text-base mt-4">
-                        <li>Help Center</li>
-                        <li>Contact Us</li>
-                        <li>Privacy Policy</li>
-                        <li>Terms of Service</li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Help Center</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Contact Us</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Privacy Policy</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Terms of Service</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 className="font-semibold text-black mb-3">Social</h4>
                     <ul className="flex flex-col gap-2 text-base mt-4">
-                        <li>Twitter</li>
-                        <li>Facebook</li>
-                        <li>LinkedIn</li>
-                        <li>Instagram</li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Twitter</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Facebook</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">LinkedIn</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Instagram</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 className="font-semibold text-black mb-3">Legal</h4>
                     <ul className="flex flex-col gap-2 text-base mt-4">
-                        <li>Cookie Policy</li>
-                        <li>Terms of Use</li>
-                        <li>Disclaimer</li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Cookie Policy</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Terms of Use</Link></li>
+                        <li><Link href="https://x.com/bundlsubs" target="_blank">Disclaimer</Link></li>
                     </ul>
                 </div>
             </div>
