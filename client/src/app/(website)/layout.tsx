@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "../../globals.css"; // still include global styles if needed
+import "../globals.css"; // still include global styles if needed
 
 const poppins = Poppins({
   variable: "--font-poppins",

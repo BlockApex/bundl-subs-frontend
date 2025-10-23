@@ -9,7 +9,7 @@ const BottomNav = () => {
     const pathname = usePathname()
 
     const navItems = [
-        { href: '/', label: 'Home', icon: House },
+        { href: '/app', label: 'Home', icon: House },
         { href: '/active', label: 'Active', icon: ChartColumn },
         { href: '/create', label: 'Discover', icon: Search },
         { href: '/history', label: 'History', icon: History },

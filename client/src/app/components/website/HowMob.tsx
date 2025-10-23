@@ -8,7 +8,7 @@ const steps = [
     tag: "Step 1",
     title: "Create your Bundle",
     description: "Pick the subscriptions you use. Bundl shows your all-in monthly cost and bundle savings in real time.",
-    image: "/assets/landing/how/screen/1.svg",
+    image: "/assets/landing/how/screen/1.png",
     list: (
       <ul className="text-base text-foreground-web flex flex-col gap-2 marker:text-primary-web marker:text-lg mt-6 text-center">
         <li>Search by category (AI, Entertainment, Design, etc.)</li>
@@ -21,7 +21,7 @@ const steps = [
     tag: "Step 2",
     title: "Choose how to pay",
     description: "Pay the way that fits your cashflow. You can switch anytime.",
-    image: "/assets/landing/how/screen/2.svg",
+    image: "/assets/landing/how/screen/2.png",
     list: (
       <ul className="text-base text-foreground-web flex flex-col gap-2 marker:text-primary-web marker:text-lg mt-6 text-center">
         <li>Smart Balance: Preload once; monthly costs auto-draw from balance; yield can offset fees</li>
@@ -34,7 +34,7 @@ const steps = [
     tag: "Step 3",
     title: "Confirm & activate",
     description: "Review your bundle, set billing cycle, and approve to start.",
-    image: "/assets/landing/how/screen/3.svg",
+    image: "/assets/landing/how/screen/3.png",
     list: (
       <ul className="text-base text-foreground-web flex flex-col gap-2 marker:text-primary-web marker:text-lg mt-6 text-center">
         <li>Selected apps & monthly total</li>
@@ -47,7 +47,7 @@ const steps = [
     tag: "Step 4",
     title: "Track & control everything",
     description: "One dashboard for all subscriptions on Bundl.",
-    image: "/assets/landing/how/screen/4.svg",
+    image: "/assets/landing/how/screen/4.png",
     list: (
       <ul className="text-base text-foreground-web flex flex-col gap-2 marker:text-primary-web marker:text-lg mt-6 text-center">
         <li>Pause / resume instantly</li>
