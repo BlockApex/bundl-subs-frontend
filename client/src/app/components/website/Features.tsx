@@ -30,9 +30,9 @@ const Features = () => {
                     </div>
                     <div className="relative lg:absolute bottom-0 right-0">
                         <Image
-                            src="/assets/landing/features/1.svg"
+                            src="/assets/landing/features/1.png"
                             alt="One Monthly Payment"
-                            width={200}
+                            width={350}
                             height={260}
                             className="object-contain mx-auto"
                         />
@@ -54,7 +54,7 @@ const Features = () => {
                     </div>
                     <div className="relative lg:absolute bottom-0 right-0">
                         <Image
-                            src="/assets/landing/features/2.svg"
+                            src="/assets/landing/features/2.png"
                             alt="Cut Your Bill"
                             width={400}
                             height={400}
@@ -99,12 +99,12 @@ const Features = () => {
                             Preset or Custom Bundle
                         </p>
                     </div>
-                    <div className="relative lg:absolute bottom-0 right-0">
+                    <div className="relative lg:absolute bottom-4 right-4">
                         <Image
-                            src="/assets/landing/features/4.svg"
+                            src="/assets/landing/features/4.png"
                             alt="Save more with Bundles"
                             width={300}
-                            height={400}
+                            height={200}
                             className="object-contain"
                         />
                     </div>

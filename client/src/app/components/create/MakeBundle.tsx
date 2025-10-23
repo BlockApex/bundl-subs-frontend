@@ -1,6 +1,7 @@
 "use client";
 import { Check, ChevronLeft, ChevronRight, MoveRight, Plus, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation'
 import Input from "../common/Input";
 import Image from "next/image";
 import { Button } from "../common/Button";
@@ -8,6 +9,7 @@ import TierModal from "./TierModal";
 import { Package, QuoteRequest, Service } from "@/app/types/bundle.types";
 import { getActiveServices, getQuote } from "@/app/services/bundle.service";
 import { Spinner } from "../common/Spinner";
+import { Bundle, useBundleStore } from "@/app/store/bundleStore";
 
 const categories = [
     { id: 1, label: "All" },
@@ -25,6 +27,9 @@ interface MakeBundleProps {
 }
 
 const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
+    const router = useRouter();
+    const { setBundle } = useBundleStore();
+
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState(categories[0]);
     const [tierOpen, setTierOpen] = useState(false);
@@ -32,6 +37,7 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
     const [loading, setLoading] = useState(true);
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [selectedPackages, setSelectedPackages] = useState<Record<string, string>>({});
+    const [_bundle, _setBundle] = useState<Bundle|null>(null);
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -63,45 +69,53 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
         return { freeOffer, discountOffer };
     };
 
+    useEffect(() => {
+        const fetchQuote = async () => {
+            if (Object.keys(selectedPackages).length === 0) {
+                _setBundle(null);
+                return;
+            }
 
-    const handleSelectPackage = async (serviceId: string, packageId: string) => {
-        // Update selected package
+            const packagesPayload: QuoteRequest["selectedPackages"] = Object.entries(selectedPackages).map(
+                ([service, _package]) => ({ service, package: _package })
+            );
+
+            try {
+                const result = await getQuote(packagesPayload);
+                console.log(result)
+                _setBundle(result);
+            } catch (error) {
+                console.error("❌ Error fetching updated quote:", error);
+            }
+        };
+
+        fetchQuote();
+    }, [selectedPackages]);
+
+    const handleSelectPackage = (serviceId: string, packageId: string) => {
         setSelectedPackages((prev) => ({ ...prev, [serviceId]: packageId }));
-
-        // Build payload for API
-        const packagesPayload: QuoteRequest["selectedPackages"] = Object.entries({
-            ...selectedPackages,
-            [serviceId]: packageId,
-        }).map(([sId, pId]) => ({
-            serviceId: sId,
-            packageId: pId,
-        }));
-
-        try {
-            const result = await getQuote(packagesPayload);
-            console.log("💬 Quote API Result:", result);
-        } catch (error) {
-            console.error("❌ Error fetching quote:", error);
-        }
-
         setTierOpen(false);
     };
 
     const handleAddClick = (service: Service) => {
-        // if already selected, remove it
         if (selectedPackages[service._id]) {
+            // ❌ Remove package and trigger re-quote automatically via useEffect
             setSelectedPackages((prev) => {
                 const updated = { ...prev };
                 delete updated[service._id];
                 return updated;
             });
         } else {
-            // otherwise open modal to select a package
             setSelectedService(service);
             setTierOpen(true);
         }
     };
 
+
+    const handleNavigateReview = () => {
+        setBundle(_bundle!);
+        router.push('/review');
+    }
 
     return (
         <div className="w-full h-auto relative">
@@ -245,35 +259,44 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                 <div className="w-full max-w-[100%] bg-dark p-2 rounded-xl flex items-center justify-between">
                     <div className="flex items-center gap-2 p-4">
                         <div className="flex items-center">
-                            <Image
-                                src="/assets/mock/detail/1.png"
-                                alt="Subscription"
-                                width={30}
-                                height={30}
-                                className="rounded-full"
-                            />
-                            <Image
-                                src="/assets/mock/detail/2.png"
-                                alt="Subscription"
-                                width={30}
-                                height={30}
-                                className="rounded-full"
-                            />
+                            {_bundle && _bundle !== null && _bundle.packages.map((p, i: number) => {
+                                return (
+                                    <Image
+                                        key={i}
+                                        src={p.service.logo}
+                                        alt="Subscription"
+                                        width={20}
+                                        height={20}
+                                        className="rounded-full"
+                                    />
+                                )
+                            })}
                         </div>
-                        <p className="text-sm lg:text-base text-white font-normal">
-                            2 services
-                        </p>
+                        {_bundle && (
+                            <p className="text-sm lg:text-base text-white font-normal hidden lg:flex">
+                                {_bundle?.packages?.length} services
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-4 p-4">
-                        <p className="text-white font-normal text-sm lg:text-base">
-                            $19.98/mo
-                        </p>
+                        {_bundle ? (
+                            <div className="flex items-center gap-2">
+                                <p className="text-white font-normal text-sm line-through lg:text-base">
+                                    {_bundle.totalOriginalPrice.toFixed(1)}
+                                </p>
+                                <p className="text-white font-normal text-sm lg:text-base">
+                                    {_bundle?.totalFirstDiscountedPrice?.toFixed(2)}/{_bundle.frequency}
+                                </p>
+                            </div>
+                        ) : ''}
                         <Button
                             variant="secondary"
                             size="sm"
                             className="flex items-center gap-2"
+                            disabled={!_bundle}
+                            onClick={handleNavigateReview}
                         >
-                            Checkout <MoveRight size={18} />
+                            Review <MoveRight size={18} />
                         </Button>
                     </div>
                 </div>

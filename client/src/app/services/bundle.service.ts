@@ -1,5 +1,5 @@
 import { Api } from "../config";
-import { QuoteRequest } from "../types/bundle.types";
+import { CreateBundleRequest, QuoteRequest } from "../types/bundle.types";
 
 
 export const getActiveServices = async () => {
@@ -25,5 +25,17 @@ export const getQuote = async (
     } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch quote.");
+    }
+};
+
+
+
+export const createBundle = async (data: CreateBundleRequest) => {
+    try {
+        const response = await Api.post("/bundle", data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create bundle.");
     }
 };

@@ -29,8 +29,8 @@ export interface Service {
 
 export interface QuoteRequest {
     selectedPackages: {
-        serviceId: string;
-        packageId: string;
+        service: string;
+        package: string;
     }[];
 }
 
@@ -43,4 +43,20 @@ export interface QuoteResponse {
         price: number;
         discount: number;
     }[];
+}
+
+
+export interface SelectedPackage {
+    service: string;
+    package: string;
+}
+
+
+
+
+export interface CreateBundleRequest {
+    name: string;
+    description: string;
+    color: string;
+    selectedPackages: SelectedPackage[];
 }

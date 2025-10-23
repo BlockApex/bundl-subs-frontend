@@ -9,7 +9,7 @@ import AnimatedText from './AnimatedText'
 
 const Hero = () => {
     return (
-        <div className='w-full max-w-full lg:max-w-6xl mx-auto h-auto overflow-hidden py-6 mt-6'>
+        <div className='w-full max-w-full lg:max-w-7xl mx-auto h-auto overflow-hidden py-6 mt-6'>
             <div className='grid grid-cols-1 lg:grid-cols-3'>
                 <section className='flex flex-col items-center lg:items-end justify-center lg:justify-start py-10' >
                     <div>

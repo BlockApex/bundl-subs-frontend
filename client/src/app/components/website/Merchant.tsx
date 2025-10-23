@@ -17,51 +17,74 @@ const icn = `w-6 h-8 bg-white
           rounded-full 
           transition-colors duration-200 
           group-hover:bg-white/30`
+
+
+const data = [
+    {
+        title: 'Access wallet-native buyers',
+        description: (
+            <>
+                Reach privacy-first users who prefer to subscribe with their <br className='hidden lg:flex' /> Solana wallets and stack apps for savings.
+            </>
+        )
+    },
+    {
+        title: 'List once, get discovered',
+        description: (
+            <>
+                Placement inside curated Bundles puts your app in front of <br className='hidden lg:flex' /> users actively building stacks to save.
+
+            </>
+        )
+    },
+    {
+        title: 'You keep settlement flow',
+        description: (
+            <>
+                Users pay direct from their wallets to you on Solana. Bundl never <br className='hidden lg:flex' />  holds funds or acts as a PSP.
+
+            </>
+        )
+    },
+    {
+        title: 'Low-lift integration',
+        description: (
+            <>
+                Use a lightweight Receipts API (unlock on verify) or drop-in <br className='hidden lg:flex' /> Web3/REST components. We automate renewals and receipts;  <br className='hidden lg:flex' /> you keep your existing systems.
+
+            </>
+        )
+    },
+]
 const Merchant = () => {
     return (
         <div className='w-full h-auto max-w-full lg:max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4'>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 p-2 lg:p-0'>
                 <section className='w-full h-full' >
                     <h1 className='text-3xl lg:text-5xl font-normal text-black'>
-                        For Merchants Who Care
+                        Why merchants love <br className='hidden lg:flex' /> Bundl
                     </h1>
-                    <div className='flex flex-col gap-4 mt-10'>
-                        <h5 className="text-xl text-black">
-                            Earn trust, not just revenue.
-                            <span className='border-b-6 border-primary-web/20 block max-w-xs' />
-                        </h5>
-                        <p className='text-base text-foreground-web max-w-md'>
-                            Bundl empowers apps, creators, and SaaS platforms to accept private wallet payments and reach new users, without handling personal data.
-                            Your customers stay in control, and you get paid instantly in USDC.
-                        </p>
-                    </div>
-                    <br className='hidden lg:flex'  />
-                    <br className='hidden lg:flex'  />
-                    <br className='hidden lg:flex'  />
-                    <br className='hidden lg:flex'  />
-                    <div className='flex flex-col gap-4 mt-10'>
-                        <h5 className="text-xl text-black">
-                            Why merchants love Bundl
-                            <span className='border-b-6 border-primary-web/20 block max-w-xs' />
-                        </h5>
-                        <ul className="text-base text-foreground-web list-disc flex flex-col gap-4 max-w-xl marker:text-primary-web marker:text-lg">
-                            <li>
-                                Zero-PII Checkout: Commit-bound receipts mean you never touch credit cards or identities, just verifiable payments.
-                            </li>
-                            <li>
-                                Instant Settlements: Get paid in seconds on Solana. Refunds, prorations, and subscriptions are programmable by design.
-                            </li>
-                            <li>
-                                Built-in Growth: Listing your app inside curated Bundles expose you to privacy-conscious users actively looking for tools to stack and save.
-                            </li>
-                            <li>
-                                No Extra Work: Plug in once using REST or Web3 SDKs, Bundl handle payments, receipts, and renewals automatically.
-                            </li>
-                        </ul>
+                    <p className='text-base text-foreground-web mt-4'>
+                        Bundl empowers apps, creators, and SaaS platforms to accept wallet <br className='hidden lg:flex' /> payments and reach new users. Your customers stay in control, and <br className='hidden lg:flex' /> you get paid instantly in USDC.
+                    </p>
+                    <div className='mt-6 flex flex-col gap-4'>
+                        {data.map((l, i) => {
+                            return (
+                                <div key={i} className='flex items-baseline gap-2'>
+                                    <span className='block w-2 h-2 bg-primary-web'></span>
+                                    <div className='ps-2'>
+                                        <h6 className='text-lg font-semibold text-black'>{l.title}</h6>
+                                        <p className='text-black text-base' >
+                                            {l.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
                 </section>
                 <section className='w-full flex flex-col items-center justify-center'>
-                    <Image src='/assets/landing/merchant.svg' alt='Merchant' width={600} height={800} />
+                    <Image src='/assets/landing/merchant.png' alt='Merchant' width={600} height={800} />
                     <div className='mt-6'>
                         <div className='w-full flex items-center gap-4'>
                             <button className={btn}>

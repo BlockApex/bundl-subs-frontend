@@ -6,6 +6,7 @@ import How from '@/app/components/website/How'
 import HowMob from '@/app/components/website/HowMob'
 import Merchant from '@/app/components/website/Merchant'
 import Navbar from '@/app/components/website/Navbar'
+import Why from '@/app/components/website/Why'
 import React from 'react'
 
 const Landing = () => {
@@ -16,6 +17,7 @@ const Landing = () => {
       <Features />
       <How />
       <HowMob />
+      <Why/>
       <Merchant />
       <CTA />
       <Footer />
