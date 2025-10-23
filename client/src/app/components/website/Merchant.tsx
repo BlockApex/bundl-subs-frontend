@@ -19,10 +19,10 @@ const icn = `w-6 h-8 bg-white
           group-hover:bg-white/30`
 const Merchant = () => {
     return (
-        <div className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4'>
-            <div className='grid grid-cols-2 gap-4'>
+        <div className='w-full h-auto max-w-full lg:max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 p-2 lg:p-0'>
                 <section className='w-full h-full' >
-                    <h1 className='text-5xl font-normal text-black'>
+                    <h1 className='text-3xl lg:text-5xl font-normal text-black'>
                         For Merchants Who Care
                     </h1>
                     <div className='flex flex-col gap-4 mt-10'>
@@ -35,10 +35,10 @@ const Merchant = () => {
                             Your customers stay in control, and you get paid instantly in USDC.
                         </p>
                     </div>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                    <br className='hidden lg:flex'  />
+                    <br className='hidden lg:flex'  />
+                    <br className='hidden lg:flex'  />
+                    <br className='hidden lg:flex'  />
                     <div className='flex flex-col gap-4 mt-10'>
                         <h5 className="text-xl text-black">
                             Why merchants love Bundl

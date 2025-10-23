@@ -3,8 +3,8 @@ import React from "react";
 
 const Footer = () => {
     return (
-        <footer className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4'>
-            <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-5 gap-8">
+        <footer className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-2 lg:p-4 mt-4'>
+            <div className="max-w-full lg:max-w-7xl mx-auto px-3 lg:px-6 py-10 grid grid-cols-1 md:grid-cols-5 gap-8">
                 {/* Logo and social icons */}
                 <div className="flex flex-col gap-4">
                     <section className='flex items-center gap-4'>

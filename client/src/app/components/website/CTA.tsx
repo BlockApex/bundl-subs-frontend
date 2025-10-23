@@ -5,8 +5,8 @@ import Image from 'next/image'
 const CTA = () => {
     return (
         <div className='w-full h-auto bg-primary-web relative overflow-hidden mt-4'>
-            <section className='flex flex-col items-center justify-center gap-6 p-4 mt-20'>
-                <h1 className='text-5xl font-normal text-white text-center'>
+            <section className='flex flex-col items-center justify-center gap-6 p-4 mt-10 lg:mt-20'>
+                    <h1 className='text-3xl lg:text-5xl font-normal text-white text-center'>
                     Bundl turns subscription chaos into <br /> one simple stream.
                 </h1>
                 <p className="text-lg text-white text-center">
