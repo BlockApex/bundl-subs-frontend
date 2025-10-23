@@ -1,6 +1,6 @@
 'use client'
 
-import { ChartColumn, History, House, Plus, Wallet2 } from 'lucide-react'
+import { ChartColumn, History, House, Search, Wallet2 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -11,7 +11,7 @@ const BottomNav = () => {
     const navItems = [
         { href: '/', label: 'Home', icon: House },
         { href: '/active', label: 'Active', icon: ChartColumn },
-        { href: '/create', label: 'Build', icon: Plus },
+        { href: '/create', label: 'Discover', icon: Search },
         { href: '/history', label: 'History', icon: History },
         { href: '/wallet', label: 'Wallet', icon: Wallet2 },
     ]
