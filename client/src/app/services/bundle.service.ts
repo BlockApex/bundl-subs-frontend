@@ -18,7 +18,7 @@ export const getQuote = async (
     packages: QuoteRequest["selectedPackages"]
 ) => {
     try {
-        const response = await Api.post("/bundle-helper/preview", {
+        const response = await Api.post("/bundle/preview", {
             selectedPackages: packages,
         });
         return response.data;

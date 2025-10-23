@@ -13,7 +13,7 @@ const TopBar = () => {
                 </div>
             </section>
             <section>
-                {/* <Wallet /> */}
+                <Wallet />
             </section>
         </div>
     )
