@@ -58,7 +58,7 @@ const data = [
 ]
 const Merchant = () => {
     return (
-        <div className='w-full h-auto max-w-full lg:max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4'>
+        <div className='w-full h-auto max-w-full lg:max-w-screen-2xl mx-auto relative overflow-hidden px-4 lg:px-10 mt-4'>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 p-2 lg:p-0'>
                 <section className='w-full h-full ps-2 lg:ps-6' >
                     <h1 className='text-3xl lg:text-5xl font-normal text-black'>

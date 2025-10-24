@@ -30,11 +30,11 @@ const Shades: React.FC<ShadesProps> = ({ setShade, shade }) => {
     }
 
     return (
-        <div className='w-full relative h-auto p-2 mb-2' >
-            <div className='flex items-center justify-between' >
+        <div className='w-full relative h-auto my-2 ' >
+            <div className='flex items-center justify-start gap-4' >
                 {shades.map((s , i) => {
                     return (
-                        <div key={i} onClick={() => handleShade(s)} className='w-14 h-14 transition-all duration-300 hover:scale-150 flex items-center justify-center rounded-lg border border-white cursor-pointer' style={{ backgroundColor: s }} >
+                        <div key={i} onClick={() => handleShade(s)} className='w-14 h-14 transition-all duration-300 hover:scale-110 flex items-center justify-center rounded-lg border border-white cursor-pointer' style={{ backgroundColor: s }} >
                             {shade === s ? <Check className='w-6 h-6 text-white' /> : ''}
                         </div>
                     )

@@ -27,15 +27,21 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
     ? "shadow-[0px_18px_34.5px_0px_#FFBD1554]"
     : "shadow-[0px_15px_28px_0px_#9DFFF4]";
 
-  // ⬅️ Chevron opposite color scheme
-  const chevronBg = bundle.dark ? "bg-primary-dark" : "bg-secondary";
-  const chevronColor = bundle.dark ? "text-white" : "text-black";
-
   return (
     <div
       className={`w-full h-auto p-4 rounded-xl ${shadow} ${bgColor}`}
     >
-      <h5 className={`text-xl font-medium ${textColor}`}>{bundle.title}</h5>
+      <div className="flex items-center justify-between">
+        <h5 className={`text-xl font-medium ${textColor}`}>{bundle.title}</h5>
+
+        <Link href='/bundles/1' >
+          <span
+            className={`w-10 h-10 rounded-full flex items-center justify-center bg-primary/80`}
+          >
+            <Image src='/assets/arrow.svg' alt="arrow" width={10} height={10} />
+          </span>
+        </Link>
+      </div>
 
       <div className="flex items-center mt-4">
         {visibleItems.map((item, i) => (
@@ -69,13 +75,6 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
             Save ${bundle.savings} ({bundle.percent}%)
           </small>
         </div>
-        <Link href='/bundles/1' >
-          <span
-            className={`w-10 h-10 rounded-full flex items-center justify-center ${chevronBg}`}
-          >
-            <ChevronRight className={`transform rotate-300 ${chevronColor}`} />
-          </span>
-        </Link>
       </div>
     </div>
   );

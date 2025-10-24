@@ -130,7 +130,7 @@ useLayoutEffect(() => {
 
 
   return (
-    <div className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4 hidden lg:block'>
+    <div className='w-full h-auto max-w-screen-2xl mx-auto relative overflow-hidden p-4 mt-4 hidden lg:block px-4 lg:px-10'>
       <section className='w-full flex flex-col lg:flex-row items-start lg:items-center justify-between'>
         <h1 className='text-3xl lg:text-5xl font-normal text-black'>
           How Bundl Works

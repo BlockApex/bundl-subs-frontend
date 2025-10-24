@@ -31,7 +31,7 @@ const features = [
 
 const Why = () => {
     return (
-        <div className="w-full max-w-full lg:max-w-screen-2xl mx-auto relative overflow-hidden px-4 py-12 mt-4">
+        <div className="w-full max-w-full xl:max-w-screen-xl mx-auto relative overflow-hidden px-4 lg:px-10 py-12 mt-4">
             <div className="relative w-full flex flex-col items-center justify-center">
                 {/* Desktop Layout */}
                 <div className="hidden md:flex relative w-full items-center justify-center mt-10">
@@ -53,25 +53,25 @@ const Why = () => {
                     {/* Floating Feature Boxes */}
                     {features.map((f, i) => {
                         const baseClass = "absolute p-3 md:p-4 text-left";
-                        let textClass = "text-base text-black font-medium mt-2 max-w-sm";
+                        let textClass = "text-base text-black font-medium mt-2 max-w-[200px]";
                         let positionClass = "";
                         let txtPosition = "";
 
                         switch (f.position) {
                             case "left-top":
-                                positionClass = "top-16 left-[10%]";
+                                positionClass = "top-16 left-[0%]";
                                 txtPosition = "items-start";
                                 break;
                             case "left-bottom":
-                                positionClass = "bottom-12 left-[10%]";
+                                positionClass = "bottom-12 left-[0%]";
                                 txtPosition = "items-start";
                                 break;
                             case "right-top":
-                                positionClass = "top-16 right-[15%]";
+                                positionClass = "top-16 right-[0%]";
                                 txtPosition = "items-start";
                                 break;
                             case "right-bottom":
-                                positionClass = "bottom-12 right-[5%]";
+                                positionClass = "bottom-0 right-[0%]";
                                 txtPosition = "items-start";
                                 break;
                             case "top":
@@ -103,8 +103,8 @@ const Why = () => {
                     <Image
                         src="/assets/landing/why/bg.png"
                         alt="Why Choose Bundl"
-                        width={280}
-                        height={280}
+                        width={250}
+                        height={250}
                         className="object-contain"
                     />
                     <div className="grid grid-cols-2 gap-4">

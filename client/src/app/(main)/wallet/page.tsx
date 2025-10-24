@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import AppLayout from '../../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
 import { getProfile } from '../../services/auth.service'
+import UserBalance from '@/app/components/UserBalance'
 
 
 
@@ -19,24 +20,7 @@ const WalletPage = () => {
     return (
         <AppLayout>
             <main className="w-full min-h-screen relative overflow-hidden p-4">
-                <div className='w-full bg-dark rounded-lg p-4 mt-2 '>
-                    <div className='w-full flex items-center justify-between gap-4 mb-4'>
-                        <p className='text-base text-white font-normal'>Total Balance</p>
-                        <button className='text-base text-primary font-normal'>Add Funds</button>
-                    </div>
-                    <h3 className='text-lg font-normal text-white mt-4'>$650.00</h3>
-                    <div className='flex items-center gap-4 mt-2'>
-                        <div className='flex items-center gap-1'>
-                            <p className='text-foreground text-base font-normal'>Wallet:</p>
-                            <p className='text-foreground text-base font-normal'>$150.00</p>
-                        </div>
-                        <div className='flex items-center gap-1'>
-                            <p className='text-foreground text-base font-normal'>Smart:</p>
-                            <p className='text-primary text-base font-normal'>$500.00</p>
-                        </div>
-                    </div>
-                </div>
-
+                <UserBalance/>
                 <div className='w-full bg-primary/20 rounded-lg p-4 mt-4  '>
                     <div className='w-full flex items-center justify-between gap-4 mb-4'>
                         <p className='text-base text-black font-normal flex items-center gap-4'> <TrendingUp className='text-primary' size={18} /> Balance</p>

@@ -23,7 +23,7 @@ export default function LandingLayout({
     <html lang="en">
       <body className={`${poppins.variable} antialiased font-body`}>
         <main className="w-full min-h-screen bg-white">
-          {children}
+            {children}
         </main>
       </body>
     </html>

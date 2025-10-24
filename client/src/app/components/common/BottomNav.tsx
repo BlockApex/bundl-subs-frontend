@@ -11,7 +11,7 @@ const BottomNav = () => {
     const navItems = [
         { href: '/app', label: 'Home', icon: House },
         { href: '/active', label: 'Active', icon: ChartColumn },
-        { href: '/create', label: 'Discover', icon: Search },
+        { href: '/discover', label: 'Discover', icon: Search },
         { href: '/history', label: 'History', icon: History },
         { href: '/wallet', label: 'Wallet', icon: Wallet2 },
     ]

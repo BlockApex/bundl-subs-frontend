@@ -23,7 +23,7 @@ const AnimatedText = () => {
   return (
     <div className="p-4 mt-4 bg-primary-web/30 rounded-xl">
       <h1
-        className={`text-3xl lg:text-5xl font-normal text-black transition-all duration-500 ease-in-out ${
+        className={`text-3xl lg:text-4xl font-normal text-black transition-all duration-500 ease-in-out  ${
           fade ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
         }`}
       >

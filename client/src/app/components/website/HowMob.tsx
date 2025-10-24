@@ -61,7 +61,7 @@ const steps = [
 
 const HowMob = () => {
   return (
-    <div className="block lg:hidden w-full h-auto max-w-screen-md mx-auto relative overflow-hidden p-4 mt-8">
+    <div className="block lg:hidden w-full h-auto max-w-screen-md mx-auto relative overflow-hidden px-4 lg:px-10 mt-8">
       {/* Header */}
       <section className="w-full flex flex-col items-center justify-center text-center gap-4">
         <h1 className="text-3xl font-semibold text-black">How Bundl Works</h1>

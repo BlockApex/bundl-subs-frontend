@@ -10,17 +10,9 @@ import { Package, QuoteRequest, Service } from "@/app/types/bundle.types";
 import { getActiveServices, getQuote } from "@/app/services/bundle.service";
 import { Spinner } from "../common/Spinner";
 import { Bundle, useBundleStore } from "@/app/store/bundleStore";
+import { categories } from "@/app/config";
 
-const categories = [
-    { id: 1, label: "All" },
-    { id: 2, label: "Featured" },
-    { id: 3, label: "AI" },
-    { id: 4, label: "Dev" },
-    { id: 5, label: "Design" },
-    { id: 6, label: "Productivity" },
-    { id: 7, label: "Entertainment" },
-    { id: 8, label: "Utility" },
-];
+
 
 interface MakeBundleProps {
     onClick: () => void;
