@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const NavSm = () => {
     const ref = useRef<HTMLDivElement | null>(null); // ✅ typed ref
-    const [open, setOpen] = useState(false);
+    const [,setOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {

@@ -60,3 +60,30 @@ export interface CreateBundleRequest {
     color: string;
     selectedPackages: SelectedPackage[];
 }
+
+
+
+export interface BundleService {
+    _id: string;
+    name: string;
+    logo: string;
+}
+
+export interface BundleItem {
+    service: {
+        _id: string;
+        name: string;
+        logo: string;
+        category:string;
+    };
+}
+
+export interface Bundle {
+    _id: string;
+    name: string;
+    color: string;
+    totalFirstDiscountedPrice: number;
+    totalOriginalPrice: number;
+    selectedPackages: BundleItem[];
+    frequency:string;
+}

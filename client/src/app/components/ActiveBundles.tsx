@@ -110,7 +110,7 @@ const data = [
 
 
 const ActiveBundles = () => {
-    let has = true;
+    const has = true;
     return (
         <div className='w-full'>
             <div className='flex items-center justify-between'>

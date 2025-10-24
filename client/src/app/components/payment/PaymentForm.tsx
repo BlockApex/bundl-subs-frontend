@@ -116,8 +116,8 @@ const PaymentForm = () => {
             </h6>
             <div className="grid grid-cols-3 gap-4 mt-2">
                 {methods.map((m, i) => {
-                    let selected = !m.disabled;
-                    let styles = selected ? 'border border-primary bg-primary/10' : 'border border-gray-200'
+                    const  selected = !m.disabled;
+                    const  styles = selected ? 'border border-primary bg-primary/10' : 'border border-gray-200'
                     return (
                         <div key={i} className={`relative w-full  p-4 rounded-xl ${styles}`}>
                             <span className="mb-2 block">

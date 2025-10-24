@@ -1,5 +1,5 @@
 import { Api } from "../config";
-import { CreateBundleRequest, QuoteRequest } from "../types/bundle.types";
+import { Bundle, CreateBundleRequest, QuoteRequest } from "../types/bundle.types";
 
 
 export const getActiveServices = async () => {
@@ -38,4 +38,15 @@ export const createBundle = async (data: CreateBundleRequest) => {
         console.error(error);
         throw new Error("Failed to create bundle.");
     }
+};
+
+
+export const getPresetBundles = async (): Promise<Bundle[]> => {
+  try {
+    const response = await Api.get("/bundle/preset");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch bundles:", error);
+    throw new Error("Failed to fetch bundles.");
+  }
 };

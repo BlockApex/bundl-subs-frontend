@@ -1,6 +1,6 @@
 import React from 'react'
 import AppLayout from '../../components/common/AppLayout'
-import BundleCard from '../../components/BundleCard'
+// import BundleCard from '../../components/BundleCard'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 
@@ -54,11 +54,11 @@ const ActiveBundles = () => {
                     <Link href='/bundles' className='text-base text-primary flex items-center gap-2'> <Plus size={17} /> Add More</Link>
                 </div>
                 <div className='flex flex-col gap-8 mt-4 p-2'>
-                    {data.map((b, i) => {
+                    {/* {data.map((b, i) => {
                         return (
                             <BundleCard bundle={b} key={i} />
                         )
-                    })}
+                    })} */}
                 </div>
             </main>
         </AppLayout>
