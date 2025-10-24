@@ -42,11 +42,21 @@ export const createBundle = async (data: CreateBundleRequest) => {
 
 
 export const getPresetBundles = async (): Promise<Bundle[]> => {
-  try {
-    const response = await Api.get("/bundle/preset");
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch bundles:", error);
-    throw new Error("Failed to fetch bundles.");
-  }
+    try {
+        const response = await Api.get("/bundle/preset");
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch bundles:", error);
+        throw new Error("Failed to fetch bundles.");
+    }
+};
+
+export const getBundleById = async (id: string): Promise<Bundle> => {
+    try {
+        const response = await Api.get(`/bundle/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch bundle:", error);
+        throw new Error("Failed to fetch bundle.");
+    }
 };

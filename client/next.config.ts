@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       "cdn-icons-png.flaticon.com", // in case you use icons
       "upload.wikimedia.org", // common fallback
       "res.cloudinary.com", // if you ever use Cloudinary
+      "about.x.com",
+      'www.iconpacks.net',
+      'blog.waalaxy.com', // 👈 add this line
     ],
   },
 };

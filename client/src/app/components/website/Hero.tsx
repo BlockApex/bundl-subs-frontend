@@ -8,6 +8,7 @@ import AnimatedText from './AnimatedText'
 import heroAnimation from '../mob.json'
 
 const Hero = () => {
+
     return (
         <div className='w-full max-w-full xl:max-w-7xl mx-auto h-auto overflow-hidden py-6 mt-6 px-4 lg:px-10'>
             <div className='grid grid-cols-1 lg:grid-cols-3'>
@@ -29,7 +30,7 @@ const Hero = () => {
                         animationData={heroAnimation}
                         loop
                         autoplay
-                        // className='w-[90%]'
+                    // className='w-[90%]'
                     />
                     <Image src='/assets/landing/hero/solana.svg' alt='Solana Image' width={150} height={100} />
                 </section>
@@ -43,7 +44,9 @@ const Hero = () => {
                             control.
                         </h1>
                         <br />
-                        <EmailInput />
+                        <EmailInput
+
+                        />
                     </div>
                 </section>
             </div>

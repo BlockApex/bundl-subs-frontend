@@ -4,9 +4,10 @@ import React from 'react';
 type ButtonProps = {
   children: React.ReactNode;
   dark?: boolean;
+  onClick?: () => void
 };
 
-const Button: React.FC<ButtonProps> = ({ children, dark = false }) => {
+const Button: React.FC<ButtonProps> = ({ children, dark = false, onClick }) => {
   return (
     <button
       className={`
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({ children, dark = false }) => {
         active:scale-[0.97]
         active:brightness-90
       `}
+      onClick={onClick}
     >
       {children}
       <span

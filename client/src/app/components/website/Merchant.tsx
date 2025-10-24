@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const btn = `bg-primary-web 
@@ -87,12 +88,15 @@ const Merchant = () => {
                     <Image src='/assets/landing/merchant.png' alt='Merchant' width={600} height={800} />
                     <div className='mt-6'>
                         <div className='w-full flex items-center gap-4'>
-                            <button className={btn}>
-                                Become a Partner
-                                <span className={icn}>
-                                    <ChevronRight size={20} />
-                                </span>
-                            </button>
+                            <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+
+                                <button className={btn}>
+                                    Become a Partner
+                                    <span className={icn}>
+                                        <ChevronRight size={20} />
+                                    </span>
+                                </button>
+                            </Link>
                             <div className='px-6 py-2 border border-gray-300 rounded-xl'>
                                 <Image src='/assets/landing/partner.svg' alt='icon' width={40} height={40} />
                             </div>

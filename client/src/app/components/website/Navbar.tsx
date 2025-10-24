@@ -29,12 +29,14 @@ const Navbar = () => {
                         </Link>
                     </section>
                     <section>
-                        <Button>
-                            Launch dApp
-                        </Button>
+                        <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+                            <Button>
+                                Launch dApp
+                            </Button>
+                        </Link>
                     </section>
                 </div>
-            </nav>
+            </nav >
             <NavSm />
         </>
     )

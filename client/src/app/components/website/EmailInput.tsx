@@ -1,7 +1,28 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import Button from './Button'
+import toast from 'react-hot-toast';
 
 const EmailInput = () => {
+    const [email, setEmail] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = () => {
+
+        if (!email.trim()) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        // Simulate a network request
+        setTimeout(() => {
+            setIsSubmitting(false);
+            toast.success("🎉 You’ve been added to the waitlist!");
+            setEmail("");
+        }, 1200);
+    };
     return (
         <div
             className="
@@ -18,6 +39,8 @@ const EmailInput = () => {
   "
         >
             <input
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
                 placeholder="Enter Email"
                 className="
       flex-1 
@@ -28,8 +51,8 @@ const EmailInput = () => {
       bg-transparent
     "
             />
-            <Button>
-                Join Waitlist
+            <Button onClick={handleSubmit}>
+                {isSubmitting ? "Submitting..." : "Join Waitlist"}
             </Button>
         </div>
 

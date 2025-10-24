@@ -5,7 +5,7 @@ import Plans from '../../components/create/Plans'
 import MakeBundle from '../../components/create/MakeBundle'
 
 const CreateBundlePage = () => {
-    const [formScreen, setFormScreen] = useState(true);
+    const [formScreen, setFormScreen] = useState(false);
 
     return (
         <AppLayout showTopbar={false}>

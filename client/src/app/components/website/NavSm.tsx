@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const NavSm = () => {
     const ref = useRef<HTMLDivElement | null>(null); // ✅ typed ref
-    const [,setOpen] = useState(false);
+    const [, setOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {
@@ -76,9 +76,11 @@ const NavSm = () => {
                         <Link href='/' className='text-base text-foreground-web'>
                             Merchant
                         </Link>
-                        <Button>
-                            GET A QOUTE
-                        </Button>
+                        <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+                            <Button>
+                                Launch App
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

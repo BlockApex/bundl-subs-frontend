@@ -185,9 +185,9 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                                         <h6 className="text-md font-normal text-black">
                                             {service.name}
                                         </h6>
-                                        <p className="text-sm text-foreground font-normal line-clamp-2">
+                                        <pre className="text-sm text-foreground font-normal  text-wrap">
                                             {service.description}
-                                        </p>
+                                        </pre>
 
                                         <div className="flex items-center justify-start gap-2 my-2 flex-wrap">
                                             {service.category && (

@@ -4,6 +4,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import Button from "./Button";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,47 +87,47 @@ const How = () => {
   const textRefs = useRef<HTMLDivElement[]>([]);
   const imageRefs = useRef<HTMLDivElement[]>([]);
 
-useLayoutEffect(() => {
-  const ctx = gsap.context(() => {
-    // Set all items invisible except the first
-    textRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
-    imageRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Set all items invisible except the first
+      textRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
+      imageRefs.current.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: `+=${steps.length * 100}%`, // smoother progression
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-      },
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: `+=${steps.length * 100}%`, // smoother progression
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
 
-    steps.forEach((_, i) => {
-      if (i === 0) return;
+      steps.forEach((_, i) => {
+        if (i === 0) return;
 
-      // Keep overlap so nothing disappears completely
-      tl.to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
-        autoAlpha: 0.4, // keep slightly visible before switching
-        duration: 0.5,
-        ease: "power2.inOut",
-      })
-        .to([textRefs.current[i], imageRefs.current[i]], {
-          autoAlpha: 1,
-          duration: 0.8,
+        // Keep overlap so nothing disappears completely
+        tl.to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
+          autoAlpha: 0.4, // keep slightly visible before switching
+          duration: 0.5,
           ease: "power2.inOut",
-        }, "<0.1") // slight overlap for smooth crossfade
-        .to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
-          autoAlpha: 0, // fully fade out *after* next is visible
-          duration: 0.3,
-          ease: "power1.inOut",
-        }, ">-0.2");
-    });
-  }, containerRef);
+        })
+          .to([textRefs.current[i], imageRefs.current[i]], {
+            autoAlpha: 1,
+            duration: 0.8,
+            ease: "power2.inOut",
+          }, "<0.1") // slight overlap for smooth crossfade
+          .to([textRefs.current[i - 1], imageRefs.current[i - 1]], {
+            autoAlpha: 0, // fully fade out *after* next is visible
+            duration: 0.3,
+            ease: "power1.inOut",
+          }, ">-0.2");
+      });
+    }, containerRef);
 
-  return () => ctx.revert();
-}, []);
+    return () => ctx.revert();
+  }, []);
 
 
   return (
@@ -141,9 +142,11 @@ useLayoutEffect(() => {
           </p>
           <Image src='/assets/landing/how/icons.svg' alt="icons" width={100} height={80} />
           <br className="block lg:hidden" />
-          <Button>
-            Connect Now
-          </Button>
+          <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+            <Button>
+              Connect Now
+            </Button>
+          </Link>
         </div>
       </section>
       <div ref={containerRef} className="relative grid grid-cols-1 lg:grid-cols-2 w-full max-w-full lg:max-w-6xl mx-auto h-auto lg:h-screen  overflow-hidden">

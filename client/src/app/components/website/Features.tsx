@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from './Button'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const Features = () => {
     return (
@@ -12,9 +13,12 @@ const Features = () => {
                     Unify your subscriptions.
                 </h1>
                 <br className='block lg:hidden' />
-                <Button>
-                    Launch dApp
-                </Button>
+                <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+
+                    <Button>
+                        Launch dApp
+                    </Button>
+                </Link>
             </section>
             <section className="w-full h-auto lg:h-[600px] xl:h-[300px] grid grid-cols-12 gap-6 mt-8">
                 {/* Left Feature */}

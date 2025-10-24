@@ -76,11 +76,14 @@ export interface BundleItem {
         logo: string;
         category:string;
     };
+    package:Package[];
+    applicableOffers:Offer[]
 }
 
 export interface Bundle {
     _id: string;
     name: string;
+    description:string;
     color: string;
     totalFirstDiscountedPrice: number;
     totalOriginalPrice: number;

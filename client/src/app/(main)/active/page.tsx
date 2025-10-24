@@ -4,47 +4,6 @@ import AppLayout from '../../components/common/AppLayout'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 
-
-
-const data = [
-    {
-        title: 'Developer Essentials',
-        items: [
-            {
-                image: '/assets/mock/bundle/1.png'
-            },
-            {
-                image: '/assets/mock/bundle/2.png'
-            },
-            {
-                image: '/assets/mock/bundle/3.png'
-            },
-            {
-                image: '/assets/mock/bundle/4.png'
-            },
-            {
-                image: '/assets/mock/bundle/1.png'
-            },
-            {
-                image: '/assets/mock/bundle/2.png'
-            },
-            {
-                image: '/assets/mock/bundle/3.png'
-            },
-            {
-                image: '/assets/mock/bundle/4.png'
-            },
-        ],
-        price: 47.32,
-        savings: 8.18,
-        percent: 15,
-        dark: false
-    },
-
-
-]
-
-
 const ActiveBundles = () => {
     return (
         <AppLayout>

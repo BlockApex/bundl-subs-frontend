@@ -13,7 +13,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
   const maxVisible = 4;
   const visibleItems = bundle.selectedPackages.slice(0, maxVisible);
   const remainingCount = bundle.selectedPackages.length - maxVisible;
-  const categories = bundle.selectedPackages.map((p) => p.service?.category)
+  const categories = [...new Set(bundle.selectedPackages.map(p => p.service?.category))];
 
   // Calculate savings and percent (based on backend fields)
   const savings = bundle.totalOriginalPrice - bundle.totalFirstDiscountedPrice;
@@ -23,7 +23,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
   const isDarkBg = isColorDark(bundle.color);
   const textColor = isDarkBg ? "text-white" : "text-black";
   const borderColor = isDarkBg ? "border-white" : "border-black";
-  const shadowColor = hexToRGBA(bundle.color, 0.5);
+  const shadowColor = hexToRGBA(bundle.color, 0.1);
   const lightBg = lightenColor(bundle.color, 35);
 
   return (
