@@ -7,7 +7,6 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
 // import PWARegister from "../components/PwaRegister";
 import SplashScreen from "../components/common/Splash";
-import Welcome from "../components/Welcome";
 
 
 
@@ -76,7 +75,6 @@ export default function RootLayout({
           </SolanaWalletProvider>
           <Toaster />
         </SplashScreen>
-        <Welcome/>
       </body>
     </html>
   );
