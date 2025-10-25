@@ -1,11 +1,8 @@
-"use client"
 import PaymentHeader from '@/app/components/payment/Header'
 import PaymentForm from '@/app/components/payment/PaymentForm'
-import PaymentSuccess from '@/app/components/payment/PaymentSuccess'
-import React, { useState } from 'react'
+import React from 'react'
 
 const BundlePayment = () => {
-    const [success, setSuccess] = useState(false);
     return (
         <main className="w-full min-h-screen relative overflow-hidden">
             <PaymentHeader />
@@ -15,7 +12,6 @@ const BundlePayment = () => {
                 </h5>
             </div>
             <PaymentForm />
-            <PaymentSuccess open={success} setOpen={setSuccess} />
         </main>
     )
 }

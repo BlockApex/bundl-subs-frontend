@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 import { Button } from '@/app/components/common/Button'
 import BundleServices from '@/app/components/details/BundleServices'
 import BundleDetailHeader from '@/app/components/details/Header'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Bundle } from '@/app/types/bundle.types'
@@ -54,11 +54,34 @@ const BundleDetail = () => {
     );
   }
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check this out!",
+          text: "Earn rewards by sharing this link!",
+          url: window.location.href, // or your custom referral URL
+        });
+        console.log("Content shared successfully");
+      } catch (error) {
+        console.log("Error sharing:", error);
+      }
+    } else {
+      // fallback for devices/browsers that don't support native share
+      alert("Sharing not supported on this device/browser");
+    }
+  };
+
   return (
     <main className="w-full min-h-screen relative overflow-hidden">
       <BundleDetailHeader bundle={bundle} />
       <BundleServices bundle={bundle} />
-      <div className='px-3 py-2 flex items-center justify-center'>
+      <div className='px-3 py-2 flex flex-col gap-2 items-center justify-center'>
+        <Button
+          onClick={handleShare}
+          variant='secondary' size='full' className='gap-2'>
+          Share & Earn <Share2 size={15} />
+        </Button>
         <Button variant='dark' size='full' className='flex items-center gap-2' >
           <Link href='/payment/1' className='flex items-center gap-2'>
             Subscribe <ChevronRight size={18} />

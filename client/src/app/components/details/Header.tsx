@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, Gift } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Bundle } from '@/app/types/bundle.types'

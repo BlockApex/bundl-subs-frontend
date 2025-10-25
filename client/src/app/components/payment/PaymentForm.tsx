@@ -1,10 +1,33 @@
 "use client";
+import { clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
 import React, { useState } from "react";
 import clsx from "clsx";
 import Switch from "../common/Switch";
 import { Check, Sparkle, TrendingUp, Wallet2 } from "lucide-react";
 import { Select } from "../common/Select";
 import { Button } from "../common/Button";
+import { useParams } from 'next/navigation';
+import PaymentSuccess from "./PaymentSuccess";
+import { subscribeBundle } from "@/app/services/bundle.service";
+import toast from "react-hot-toast";
+import { useWallet } from "@solana/wallet-adapter-react";
+
+
+
+type InstructionKey = {
+    pubkey: string;
+    isSigner: boolean;
+    isWritable: boolean;
+};
+
+
+
+interface RpcError {
+    message?: string;
+    logs?: string[];
+    code?: number;
+    data?: unknown;
+}
 
 
 const durations = [
@@ -41,8 +64,109 @@ const methods = [
 ]
 
 const PaymentForm = () => {
+    const { id } = useParams<{ id: string }>()
+    const { publicKey, sendTransaction } = useWallet();
+
     const [enabled, setEnabled] = useState(false);
     const [duration, setDuration] = useState(durations[1]);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleSubscribe = async () => {
+        console.log("🟢 Connected Wallet:", publicKey?.toBase58());
+        if (!publicKey) throw new Error("Wallet not connected");
+
+        try {
+            setLoading(true);
+
+            console.log("📡 Fetching transaction data from backend...");
+            const response = await subscribeBundle(id);
+
+            console.log("✅ Backend Response:", response);
+
+            const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+            const tx = new Transaction();
+
+            for (const [i, txData] of response.transactions.entries()) {
+                console.log(`🧩 Building Instruction #${i + 1}`);
+                const instr = txData.data.transaction;
+
+                console.log("🔑 Raw Keys:", instr.keys);
+
+                const keys = instr.keys.map((k:InstructionKey) => {
+                    const keyInfo = {
+                        pubkey: new PublicKey(k.pubkey),
+                        isSigner: k.isSigner,
+                        isWritable: k.isWritable,
+                    };
+                    console.log("   ↳ Key:", keyInfo.pubkey.toBase58(), "| Signer:", keyInfo.isSigner, "| Writable:", keyInfo.isWritable);
+                    return keyInfo;
+                });
+
+                const programId = new PublicKey(instr.programId);
+                console.log("🏗️ Program ID:", programId.toBase58());
+
+                const data = Buffer.from(instr.data);
+                console.log("🧱 Instruction Data (raw bytes):", instr.data);
+
+                const instruction = new TransactionInstruction({
+                    keys,
+                    programId,
+                    data,
+                });
+
+                tx.add(instruction);
+            }
+
+            const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+            console.log("🕓 Latest Blockhash:", latestBlockhash);
+
+            tx.feePayer = publicKey!;
+            tx.recentBlockhash = latestBlockhash.blockhash;
+
+            console.log("🧾 Final Transaction Message:", tx.compileMessage());
+            console.log("🚀 Sending Transaction (skipPreflight: true)...");
+
+            // Add skipPreflight and other options
+            const signature = await sendTransaction(tx, connection, {
+                // skipPreflight: true,
+                preflightCommitment: "confirmed",
+                maxRetries: 2,
+            });
+
+            console.log("✅ Transaction Sent! Signature:", signature);
+
+            console.log("⏳ Confirming Transaction...");
+            const confirmation = await connection.confirmTransaction(
+                {
+                    signature,
+                    blockhash: latestBlockhash.blockhash,
+                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                },
+                "confirmed"
+            );
+
+            console.log("🎉 Transaction Confirmed:", confirmation);
+            toast.success("Bundle subscribed successfully!");
+        } catch (err: unknown) {
+            console.error("❌ Transaction Error (raw):", err);
+
+            // Try to extract wallet adapter info
+            if (err && typeof err === "object") {
+                const rpcErr = err as RpcError;
+                if (rpcErr.message) console.error("🔴 Error Message:", rpcErr.message);
+                if (rpcErr.logs) console.error("📜 Program Logs:", rpcErr.logs);
+                if (rpcErr.code) console.error("💥 RPC Code:", rpcErr.code);
+                if (rpcErr.data) console.error("🧩 Error Data:", rpcErr.data);
+            }
+
+            toast.error((err as Error)?.message || "Failed to subscribe bundle");
+        } finally {
+            setLoading(false);
+            console.log("🧹 Transaction attempt finished");
+        }
+    };
+
 
     return (
         <div className="w-full h-auto relative p-4">
@@ -116,8 +240,8 @@ const PaymentForm = () => {
             </h6>
             <div className="grid grid-cols-3 gap-4 mt-2">
                 {methods.map((m, i) => {
-                    const  selected = !m.disabled;
-                    const  styles = selected ? 'border border-primary bg-primary/10' : 'border border-gray-200'
+                    const selected = !m.disabled;
+                    const styles = selected ? 'border border-primary bg-primary/10' : 'border border-gray-200'
                     return (
                         <div key={i} className={`relative w-full  p-4 rounded-xl ${styles}`}>
                             <span className="mb-2 block">
@@ -153,10 +277,11 @@ const PaymentForm = () => {
                 <h6 className="text-lg text-black">$66.30</h6>
             </div>
             <div className="mt-6 pb-10">
-                <Button className="" variant="dark" size="full">
+                <Button loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
                     Subscribe
                 </Button>
             </div>
+            <PaymentSuccess open={success} setOpen={setSuccess} />
         </div>
     );
 };

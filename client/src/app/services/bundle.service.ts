@@ -60,3 +60,16 @@ export const getBundleById = async (id: string): Promise<Bundle> => {
         throw new Error("Failed to fetch bundle.");
     }
 };
+
+
+
+
+export const subscribeBundle = async (id: string) => {
+    try {
+        const response = await Api.post(`/subscribe/bundle/${id}`, { numberOfIntervals: 12 });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to subscribe bundle.");
+    }
+};
