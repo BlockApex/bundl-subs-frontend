@@ -5,6 +5,7 @@ import Container from "../components/common/Container";
 import { SolanaWalletProvider } from '../providers';
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
+import PWARegister from "../components/PwaRegister";
 
 
 
@@ -54,7 +55,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#F6754F" />
+        <link rel="apple-touch-icon" href="/icons/192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body className={`${poppins.variable} antialiased font-body`}>
+        <PWARegister />
         <NextTopLoader color="#00d5be" height={5} />
         <SolanaWalletProvider>
           <Container>
