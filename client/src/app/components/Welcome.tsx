@@ -1,21 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./common/Button";
 import { ChevronRight } from "lucide-react";
 
 const Welcome = () => {
     const [show, setShow] = useState(false);
 
-    useEffect(() => {
-        // Check if user has already seen welcome screen
-        const hasVisited = localStorage.getItem("bundl_has_visited");
-        if (!hasVisited) {
-            localStorage.removeItem("bundl_has_visited")
-            setShow(true);
-        }
-    }, []);
+    // useEffect(() => {
+    //     // Check if user has already seen welcome screen
+    //     const hasVisited = localStorage.getItem("bundl_has_visited");
+    //     if (!hasVisited) {
+    //         setShow(true);
+    //     }
+    // }, []);
 
     const handleStart = () => {
         // localStorage.setItem("bundl_has_visited", "true");

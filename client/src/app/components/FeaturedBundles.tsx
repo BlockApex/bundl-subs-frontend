@@ -13,6 +13,7 @@ const FeaturedBundles: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        localStorage.removeItem('bundl_has_visited')
         const fetchBundles = async () => {
             try {
                 setLoading(true);
