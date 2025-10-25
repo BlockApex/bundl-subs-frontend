@@ -10,12 +10,14 @@ import toast from "react-hot-toast";
 import { getPresetBundles } from "@/app/services/bundle.service";
 import { Spinner } from "@/app/components/common/Spinner";
 import { Bundle, BundleItem } from "@/app/types/bundle.types";
+import DiscoverFilter from "@/app/components/DiscoverFilter";
 
 const Discover = () => {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState(categories[0]);
     const [bundles, setBundles] = useState<Bundle[]>([]);
     const [loading, setLoading] = useState(false);
+    const [filterOpen, setFilterOpen] = useState(false);
 
     useEffect(() => {
         const fetchBundles = async () => {
@@ -81,7 +83,7 @@ const Discover = () => {
                                 className="text-white"
                                 icon={<Search className="text-white" />}
                             />
-                            <button className="absolute right-2 w-10 h-10 flex items-center justify-center bg-white/30 rounded-lg">
+                            <button onClick={() => setFilterOpen(true)} className="absolute right-2 w-10 h-10 flex items-center justify-center bg-white/30 rounded-lg">
                                 <ListFilter size={20} className="text-white" />
                             </button>
                         </div>
@@ -118,6 +120,7 @@ const Discover = () => {
                         <p className="text-center text-gray-400">No bundles found</p>
                     )}
                 </div>
+                <DiscoverFilter open={filterOpen} setOpen={setFilterOpen} />
             </main>
         </AppLayout>
     );

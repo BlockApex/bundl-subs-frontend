@@ -16,7 +16,7 @@ const Footer = () => {
                         <Link href='https://x.com/bundlsubs' target="_blank">
                             <Image src="/assets/landing/social/1.svg" alt="X" width={50} height={50} />
                         </Link>
-                        <Link href='https://www.legends.fun/leaderboard/b140c1ee-85a8-44b0-b25b-9a636392f887?category=99e83efb-d648-45d9-a20c-b6de26d475b3' target="_blank">
+                        <Link href='https://www.legends.fun/products/f47715cc-cd61-414e-83b9-229786e48817' target="_blank">
                             <Image src="/assets/landing/social/2.svg" alt="Instagram" width={50} height={50} />
                         </Link>
                     </div>

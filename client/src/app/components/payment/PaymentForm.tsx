@@ -81,85 +81,82 @@ const PaymentForm = () => {
 
             console.log("📡 Fetching transaction data from backend...");
             const response = await subscribeBundle(id);
-
             console.log("✅ Backend Response:", response);
 
             const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-            const tx = new Transaction();
 
             for (const [i, txData] of response.transactions.entries()) {
-                console.log(`🧩 Building Instruction #${i + 1}`);
-                const instr = txData.data.transaction;
+                console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
 
-                console.log("🔑 Raw Keys:", instr.keys);
+                const tx = new Transaction();
 
-                const keys = instr.keys.map((k:InstructionKey) => {
-                    const keyInfo = {
+                if (txData.type === "approval") {
+                    const instr = txData.data.instruction;
+
+                    const keys = instr.keys.map((k: InstructionKey) => ({
                         pubkey: new PublicKey(k.pubkey),
                         isSigner: k.isSigner,
                         isWritable: k.isWritable,
-                    };
-                    console.log("   ↳ Key:", keyInfo.pubkey.toBase58(), "| Signer:", keyInfo.isSigner, "| Writable:", keyInfo.isWritable);
-                    return keyInfo;
+                    }));
+
+                    const programId = new PublicKey(instr.programId);
+                    const data = Buffer.from(instr.data);
+
+                    tx.add(new TransactionInstruction({ keys, programId, data }));
+                    console.log("   ↳ Approval instruction added");
+
+                } else
+                     if (txData.type === "bundle") {
+                    const bundleTx = txData.data.transaction;
+
+                    for (const instr of bundleTx.instructions) {
+                        const keys = instr.keys.map((k: InstructionKey) => ({
+                            pubkey: new PublicKey(k.pubkey),
+                            isSigner: k.isSigner,
+                            isWritable: k.isWritable,
+                        }));
+
+                        const programId = new PublicKey(instr.programId);
+                        const data = Buffer.from(instr.data);
+
+                        tx.add(new TransactionInstruction({ keys, programId, data }));
+                    }
+                    console.log(`   ↳ Bundle transaction added with ${bundleTx.instructions.length} instructions`);
+
+                    // Optional: handle additional backend signers if you have their Keypairs
+                    // if (bundleTx.signers?.length) {
+                    //     tx.partialSign(...bundleTx.signersAsKeypairs);
+                    // }
+                }
+
+                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+                tx.recentBlockhash = latestBlockhash.blockhash;
+                tx.feePayer = publicKey!;
+
+                console.log("🚀 Sending transaction...");
+                const signature = await sendTransaction(tx, connection, {
+                    skipPreflight:true,
+                    preflightCommitment: "confirmed",
+                    maxRetries: 2,
                 });
 
-                const programId = new PublicKey(instr.programId);
-                console.log("🏗️ Program ID:", programId.toBase58());
+                console.log("✅ Transaction Sent! Signature:", signature);
 
-                const data = Buffer.from(instr.data);
-                console.log("🧱 Instruction Data (raw bytes):", instr.data);
+                await connection.confirmTransaction(
+                    {
+                        signature,
+                        blockhash: latestBlockhash.blockhash,
+                        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                    },
+                    "confirmed"
+                );
 
-                const instruction = new TransactionInstruction({
-                    keys,
-                    programId,
-                    data,
-                });
-
-                tx.add(instruction);
+                console.log("🎉 Transaction Confirmed!");
             }
 
-            const latestBlockhash = await connection.getLatestBlockhash("confirmed");
-            console.log("🕓 Latest Blockhash:", latestBlockhash);
-
-            tx.feePayer = publicKey!;
-            tx.recentBlockhash = latestBlockhash.blockhash;
-
-            console.log("🧾 Final Transaction Message:", tx.compileMessage());
-            console.log("🚀 Sending Transaction (skipPreflight: true)...");
-
-            // Add skipPreflight and other options
-            const signature = await sendTransaction(tx, connection, {
-                // skipPreflight: true,
-                preflightCommitment: "confirmed",
-                maxRetries: 2,
-            });
-
-            console.log("✅ Transaction Sent! Signature:", signature);
-
-            console.log("⏳ Confirming Transaction...");
-            const confirmation = await connection.confirmTransaction(
-                {
-                    signature,
-                    blockhash: latestBlockhash.blockhash,
-                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-                },
-                "confirmed"
-            );
-
-            console.log("🎉 Transaction Confirmed:", confirmation);
             toast.success("Bundle subscribed successfully!");
         } catch (err: unknown) {
-            console.error("❌ Transaction Error (raw):", err);
-
-            // Try to extract wallet adapter info
-            if (err && typeof err === "object") {
-                const rpcErr = err as RpcError;
-                if (rpcErr.message) console.error("🔴 Error Message:", rpcErr.message);
-                if (rpcErr.logs) console.error("📜 Program Logs:", rpcErr.logs);
-                if (rpcErr.code) console.error("💥 RPC Code:", rpcErr.code);
-                if (rpcErr.data) console.error("🧩 Error Data:", rpcErr.data);
-            }
-
+            console.error("❌ Transaction Error:", err);
             toast.error((err as Error)?.message || "Failed to subscribe bundle");
         } finally {
             setLoading(false);

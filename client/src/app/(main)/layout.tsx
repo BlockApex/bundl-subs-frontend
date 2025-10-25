@@ -5,7 +5,9 @@ import Container from "../components/common/Container";
 import { SolanaWalletProvider } from '../providers';
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
-import PWARegister from "../components/PwaRegister";
+// import PWARegister from "../components/PwaRegister";
+import SplashScreen from "../components/common/Splash";
+import Welcome from "../components/Welcome";
 
 
 
@@ -64,14 +66,17 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${poppins.variable} antialiased font-body`}>
-        <PWARegister />
-        <NextTopLoader color="#00d5be" height={5} />
-        <SolanaWalletProvider>
-          <Container>
-            {children}
-          </Container>
-        </SolanaWalletProvider>
-        <Toaster />
+        <SplashScreen>
+          {/* <PWARegister /> */}
+          <NextTopLoader color="#00d5be" height={5} />
+          <SolanaWalletProvider>
+            <Container>
+              {children}
+            </Container>
+          </SolanaWalletProvider>
+          <Toaster />
+        </SplashScreen>
+        <Welcome/>
       </body>
     </html>
   );

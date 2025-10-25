@@ -10,7 +10,7 @@ const BottomNav = () => {
 
     const navItems = [
         { href: '/app', label: 'Home', icon: House },
-        { href: '/active', label: 'Active', icon: ChartColumn },
+        { href: '/bundles/me', label: 'My Bundle', icon: ChartColumn },
         { href: '/discover', label: 'Discover', icon: Search },
         { href: '/activity', label: 'Activity', icon: BellIcon },
         { href: '/wallet', label: 'Wallet', icon: Wallet2 },

@@ -18,12 +18,20 @@ export const Api = axios.create({
 
 
 export const categories = [
-    { id: 1, label: "All" },
-    { id: 2, label: "Featured" },
-    { id: 3, label: "AI" },
-    { id: 4, label: "Dev" },
-    { id: 5, label: "Design" },
-    { id: 6, label: "Productivity" },
-    { id: 7, label: "Entertainment" },
-    { id: 8, label: "Utility" },
+  { id: 1, label: "All" },
+  { id: 2, label: "Featured" },
+  { id: 3, label: "AI" },
+  { id: 4, label: "Dev" },
+  { id: 5, label: "Design" },
+  { id: 6, label: "Productivity" },
+  { id: 7, label: "Entertainment" },
+  { id: 8, label: "Utility" },
 ];
+
+export const perks = [
+  { id: 1, label: "Free Trial" },
+  { id: 2, label: "100% Refund Policy" },
+  { id: 3, label: "Proration Rules" },
+  { id: 4, label: "Family Sharing" },
+  { id: 5, label: "Student Discount" },
+]
