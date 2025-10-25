@@ -12,12 +12,13 @@ const Welcome = () => {
         // Check if user has already seen welcome screen
         const hasVisited = localStorage.getItem("bundl_has_visited");
         if (!hasVisited) {
+            localStorage.removeItem("bundl_has_visited")
             setShow(true);
         }
     }, []);
 
     const handleStart = () => {
-        localStorage.setItem("bundl_has_visited", "true");
+        // localStorage.setItem("bundl_has_visited", "true");
         setShow(false);
     };
 
