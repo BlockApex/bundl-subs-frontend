@@ -1,43 +1,55 @@
+'use client';
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { isColorDark, hexToRGBA, lightenColor } from "../utils";
-import { Bundle } from "../types/bundle.types";
+import { isColorDark, hexToRGBA, lightenColor, isSubscription } from "../utils";
+import { Bundle, MyBundle } from "../types/bundle.types";
 
 export interface BundleCardProps {
-  bundle: Bundle
+  bundle: Bundle | MyBundle;
 }
 
 const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
-  const maxVisible = 4;
-  const visibleItems = bundle.selectedPackages.slice(0, maxVisible);
-  const remainingCount = bundle.selectedPackages.length - maxVisible;
-  const categories = [...new Set(bundle.selectedPackages.map(p => p.service?.category))];
+  // ✅ Normalize bundle data — unify access whether it's Subscription or Bundle
+  const normalized = isSubscription(bundle) ? bundle.bundle : bundle;
 
-  // Calculate savings and percent (based on backend fields)
-  const savings = bundle.totalOriginalPrice - bundle.totalFirstDiscountedPrice;
-  const percent = ((savings / bundle.totalOriginalPrice) * 100).toFixed(1);
+  const maxVisible = 4;
+  const visibleItems = normalized.selectedPackages.slice(0, maxVisible);
+  const remainingCount = normalized.selectedPackages.length - maxVisible;
+  const categories = [
+    ...new Set(normalized.selectedPackages.map((p) => p.service?.category)),
+  ];
+
+  // 🧮 Calculate savings and percent (based on backend fields)
+  const savings =
+    normalized.totalOriginalPrice - normalized.totalFirstDiscountedPrice;
+  const percent = (
+    (savings / normalized.totalOriginalPrice) *
+    100
+  ).toFixed(1);
 
   // 🎨 Dynamic color logic
-  const isDarkBg = isColorDark(bundle.color);
+  const isDarkBg = isColorDark(normalized.color);
   const textColor = isDarkBg ? "text-white" : "text-black";
   const borderColor = isDarkBg ? "border-white" : "border-black";
-  const shadowColor = hexToRGBA(bundle.color, 0.1);
-  const lightBg = lightenColor(bundle.color, 35);
+  const shadowColor = hexToRGBA(normalized.color, 0.1);
+  const lightBg = lightenColor(normalized.color, 35);
 
   return (
     <div
       className="w-full h-auto p-4 rounded-xl transition-all duration-300"
       style={{
-        backgroundColor: bundle.color,
+        backgroundColor: normalized.color,
         boxShadow: `0px 15px 30px ${shadowColor}`,
       }}
     >
       <div className="flex items-center justify-between">
-        <h5 className={`text-xl font-medium ${textColor}`}>{bundle.name}</h5>
+        <h5 className={`text-xl font-medium ${textColor}`}>
+          {normalized.name}
+        </h5>
 
-        <Link href={`/bundles/${bundle._id}`}>
+        <Link href={`/bundles/${normalized._id}`}>
           <span
             className="w-10 h-10 rounded-full flex items-center justify-center"
             style={{ backgroundColor: lightBg }}
@@ -46,16 +58,19 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
           </span>
         </Link>
       </div>
+
       <div className="flex items-center gap-2">
         {categories.map((c, i) => (
-          <span className={`px-3 py-1 text-sm ${textColor} rounded-lg capitalize`}
+          <span
             key={i}
+            className={`px-3 py-1 text-sm ${textColor} rounded-lg capitalize`}
             style={{ backgroundColor: lightBg }}
           >
             {c}
           </span>
         ))}
       </div>
+
       <div className="flex items-center mt-4">
         {visibleItems.map((item, i) => (
           <div
@@ -82,12 +97,23 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
       <div className="w-full flex items-baseline justify-between mt-4">
         <div>
           <p className={`text-base font-normal flex items-center gap-2 ${textColor}`}>
-            <Sparkle size={16} /> ${bundle.totalFirstDiscountedPrice.toFixed(2)} /{bundle.frequency}
+            <Sparkle size={16} /> $
+            {normalized.totalFirstDiscountedPrice.toFixed(2)} /{normalized.frequency}
           </p>
           <small className={textColor}>
             Save ${savings.toFixed(2)} ({percent}%)
           </small>
         </div>
+
+        {/* ✅ Conditionally show "Subscription" tag */}
+        {isSubscription(bundle) && (
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-md ${textColor}`}
+            style={{ backgroundColor: lightBg }}
+          >
+            Subscription
+          </span>
+        )}
       </div>
     </div>
   );

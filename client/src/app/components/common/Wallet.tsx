@@ -1,6 +1,6 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Wallet2 } from 'lucide-react';
+import { LogOut, Wallet2 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import toast from 'react-hot-toast';
@@ -59,27 +59,53 @@ const Wallet = () => {
 
     // ✅ Automatically authenticate after wallet connection
     useEffect(() => {
-        // if (connected && !isAuthenticated) {
-        //     handleAuthFlow();
-        // }
+        if (connected && !isAuthenticated) {
+            handleAuthFlow();
+        }
     }, [connected, isAuthenticated, handleAuthFlow]);
 
+
+    const handleLogout = async () => {
+        try {
+            await disconnect(); // disconnect wallet
+            setAuthenticated(false); // clear auth store
+            toast.success('Logged out successfully.');
+        } catch (error) {
+            console.error('Logout failed:', error);
+            toast.error('Failed to logout. Try again.');
+        }
+    }
 
 
     return (
         <div className="flex flex-col items-center gap-3">
-            <button
-                className="wallet_button"
-                onClick={() => {
-                    if (connected) handleAuthFlow();
-                    else setVisible(true);
-                }}
-                disabled={isAuthenticating}
-            >
-                <Wallet2 size={15} />
-                {isAuthenticating ? 'Authenticating...'
-                    : connected ? `${publicKey?.toBase58().slice(0, 4)}...${publicKey?.toBase58().slice(-4)}` : 'Connect'}
-            </button>
+            {isAuthenticated && connected ? (
+                <div className='flex items-center gap-2'>
+                    <p className='wallet_button'>
+                        <Wallet2 size={15} />
+                        {publicKey?.toBase58().slice(0, 4)}...${publicKey?.toBase58().slice(-4)}
+                    </p>
+                    <button
+                        className="wallet_button"
+                        onClick={handleLogout}
+                    >
+                        <LogOut />
+                    </button>
+                </div>
+            ) : (
+                <button
+                    className="wallet_button"
+                    onClick={() => {
+                        if (connected) handleAuthFlow();
+                        else setVisible(true);
+                    }}
+                    disabled={isAuthenticating}
+                >
+                    <Wallet2 size={15} />
+                    {isAuthenticating ? 'Authenticating...'
+                        : 'Connect'}
+                </button>
+            )}
         </div>
     );
 };

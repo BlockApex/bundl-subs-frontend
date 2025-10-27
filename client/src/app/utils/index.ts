@@ -1,3 +1,5 @@
+import { MyBundle, Subscription } from "../types/bundle.types";
+
 export const isColorDark = (hex: string): boolean => {
   hex = hex.replace("#", "");
   if (hex.length === 3) hex = hex.split("").map((c) => c + c).join("");
@@ -43,3 +45,9 @@ export const shortenTx = (tx: string, start = 4, end = 6) => {
   if (!tx) return '';
   return `${tx.slice(0, start)}....${tx.slice(-end)}`;
 };
+
+
+
+export function isSubscription(item: MyBundle): item is Subscription & { isSubscription: true } {
+  return (item as Subscription).bundle !== undefined && (item as any).isSubscription === true;
+}

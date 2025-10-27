@@ -1,5 +1,5 @@
 "use client";
-import { clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Cluster, clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Switch from "../common/Switch";
@@ -12,6 +12,7 @@ import { getBundleById, paymentBundle, prepareSubscription, subscribeBundle } fr
 import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Bundle, Subscription } from "@/app/types/bundle.types";
+import { CHAIN } from "@/app/config";
 
 
 
@@ -107,7 +108,7 @@ const PaymentForm = () => {
         try {
             setLoading(true);
             const response = await subscribeBundle(id);
-            const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+            const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
 
 
             for (const [i, txData] of response.transactions.entries()) {
@@ -163,7 +164,7 @@ const PaymentForm = () => {
             let interval = enabled ? duration.key : 1;
             const response = await prepareSubscription(id, interval);
             console.log(response.transactions)
-            const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+            const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
 
             for (const [i, txData] of response.transactions.entries()) {
                 console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);

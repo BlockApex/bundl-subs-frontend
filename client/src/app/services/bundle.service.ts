@@ -1,5 +1,5 @@
 import { Api } from "../config";
-import { Bundle, CreateBundleRequest, QuoteRequest } from "../types/bundle.types";
+import { Bundle, CreateBundleRequest, QuoteRequest, Subscription } from "../types/bundle.types";
 
 
 export const getActiveServices = async () => {
@@ -94,3 +94,66 @@ export const paymentBundle = async (id: string) => {
         throw new Error("Failed to subscribe bundle.");
     }
 }
+
+
+export const getMyBundles = async () => {
+    try {
+        // Fetch bundles and subscriptions concurrently
+        const [bundlesRes, subsRes] = await Promise.allSettled([
+            Api.get('/bundle'),
+            Api.get('/subscription'),
+        ]);
+
+        // Extract data safely
+        const bundles =
+            bundlesRes.status === 'fulfilled' && Array.isArray(bundlesRes.value.data)
+                ? bundlesRes.value.data
+                : [];
+
+        const subscriptions =
+            subsRes.status === 'fulfilled' && Array.isArray(subsRes.value.data)
+                ? subsRes.value.data.map((s: Subscription) => ({
+                    ...s,
+                    isSubscription: true,
+                }))
+                : [];
+
+        // Merge and remove duplicates by `_id`
+        const allBundlesMap = new Map<string, any>();
+        [...bundles, ...subscriptions].forEach((item) => {
+            if (item && item._id) {
+                allBundlesMap.set(item._id, item);
+            }
+        });
+
+        const allBundles = Array.from(allBundlesMap.values());
+
+        // If nothing found
+        if (allBundles.length === 0) {
+            console.warn('No bundles or subscriptions found.');
+            return [];
+        }
+
+        return allBundles;
+    } catch (error) {
+        console.error('❌ Failed to fetch bundles:', error);
+        return []; // Return empty array to avoid breaking UI
+    }
+};
+
+export const recentActiveBundles = async () => {
+    try {
+        const response = await Api.get("/subscription");
+
+        // ✅ Ensure response.data is an array
+        const data = Array.isArray(response.data) ? response.data : [];
+
+        // ✅ Return only up to 3 items
+        const recentBundles = data.length > 3 ? data.slice(0, 3) : data;
+
+        return recentBundles;
+    } catch (error) {
+        console.error("❌ Failed to fetch bundles:", error);
+        throw new Error("Failed to fetch bundles.");
+    }
+};

@@ -125,3 +125,9 @@ export interface PaymentHistory {
     status: "success" | "failed" | "pending";
     txHash: string;
 }
+
+
+
+export type MyBundle = 
+  | Bundle 
+  | (Subscription & { isSubscription: true , status:string});
