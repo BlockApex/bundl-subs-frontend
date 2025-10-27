@@ -88,9 +88,9 @@ const PaymentForm = () => {
             for (const [i, txData] of response.transactions.entries()) {
                 console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
 
-                const tx = new Transaction();
-
-                if (txData.type === "approval") {
+                let tx = new Transaction();
+                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+                if (txData.type === "approval" || txData.type === "initializeController") {
                     const instr = txData.data.instruction;
 
                     const keys = instr.keys.map((k: InstructionKey) => ({
@@ -103,46 +103,29 @@ const PaymentForm = () => {
                     const data = Buffer.from(instr.data);
 
                     tx.add(new TransactionInstruction({ keys, programId, data }));
+                    tx.recentBlockhash = latestBlockhash.blockhash;
+                    tx.feePayer = publicKey!;
                     console.log("   ↳ Approval instruction added");
 
                 } else
-                     if (txData.type === "bundle") {
-                    const bundleTx = txData.data.transaction;
+                    if (txData.type === "bundle") {
+                        const bundleTx = txData.data.transaction as string;
+                        tx = Transaction.from(Buffer.from(bundleTx, 'base64'))
 
-                    for (const instr of bundleTx.instructions) {
-                        const keys = instr.keys.map((k: InstructionKey) => ({
-                            pubkey: new PublicKey(k.pubkey),
-                            isSigner: k.isSigner,
-                            isWritable: k.isWritable,
-                        }));
-
-                        const programId = new PublicKey(instr.programId);
-                        const data = Buffer.from(instr.data);
-
-                        tx.add(new TransactionInstruction({ keys, programId, data }));
                     }
-                    console.log(`   ↳ Bundle transaction added with ${bundleTx.instructions.length} instructions`);
 
-                    // Optional: handle additional backend signers if you have their Keypairs
-                    // if (bundleTx.signers?.length) {
-                    //     tx.partialSign(...bundleTx.signersAsKeypairs);
-                    // }
-                }
 
-                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
-                tx.recentBlockhash = latestBlockhash.blockhash;
-                tx.feePayer = publicKey!;
 
                 console.log("🚀 Sending transaction...");
                 const signature = await sendTransaction(tx, connection, {
-                    skipPreflight:true,
+                    // skipPreflight:true,
                     preflightCommitment: "confirmed",
                     maxRetries: 2,
                 });
 
                 console.log("✅ Transaction Sent! Signature:", signature);
 
-                await connection.confirmTransaction(
+                const confirmation = await connection.confirmTransaction(
                     {
                         signature,
                         blockhash: latestBlockhash.blockhash,
@@ -151,7 +134,12 @@ const PaymentForm = () => {
                     "confirmed"
                 );
 
-                console.log("🎉 Transaction Confirmed!");
+                if (confirmation.value.err === null) {
+                    console.log(`https://solscan.io/tx/${signature}`);
+                    console.log("🎉 Transaction Confirmed!");
+                } else {
+                    throw new Error(`Error subscription tokens: ${confirmation.value.err}`);
+                }
             }
 
             toast.success("Bundle subscribed successfully!");
