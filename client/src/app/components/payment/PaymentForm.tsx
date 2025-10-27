@@ -1,6 +1,6 @@
 "use client";
 import { clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Switch from "../common/Switch";
 import { Check, Sparkle, TrendingUp, Wallet2 } from "lucide-react";
@@ -8,9 +8,10 @@ import { Select } from "../common/Select";
 import { Button } from "../common/Button";
 import { useParams } from 'next/navigation';
 import PaymentSuccess from "./PaymentSuccess";
-import { subscribeBundle } from "@/app/services/bundle.service";
+import { getBundleById, paymentBundle, prepareSubscription, subscribeBundle } from "@/app/services/bundle.service";
 import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { Bundle, Subscription } from "@/app/types/bundle.types";
 
 
 
@@ -66,23 +67,102 @@ const methods = [
 const PaymentForm = () => {
     const { id } = useParams<{ id: string }>()
     const { publicKey, sendTransaction } = useWallet();
-
+    const [bundle, setBundle] = useState<Bundle | null>(null);
     const [enabled, setEnabled] = useState(false);
     const [duration, setDuration] = useState(durations[1]);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [prepare, setPrepare] = useState(false);
+    const [subscription, setSubscription] = useState<null | Subscription>(null);
+
+
+
+
+    useEffect(() => {
+        const fetchBundle = async () => {
+            try {
+                setLoading(true);
+                const data = await getBundleById(id);
+                setBundle(data)
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    toast.error(err.message || 'Failed to fetch bundle');
+                } else {
+                    toast.error('Failed to fetch bundle');
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (id) {
+            fetchBundle();
+        }
+    }, [id]);
+
+
 
     const handleSubscribe = async () => {
-        console.log("🟢 Connected Wallet:", publicKey?.toBase58());
         if (!publicKey) throw new Error("Wallet not connected");
 
         try {
             setLoading(true);
-
-            console.log("📡 Fetching transaction data from backend...");
             const response = await subscribeBundle(id);
-            console.log("✅ Backend Response:", response);
+            const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
+
+            for (const [i, txData] of response.transactions.entries()) {
+                console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
+
+                let tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+
+                console.log("🚀 Sending transaction...");
+                const signature = await sendTransaction(tx, connection, {
+                    // skipPreflight:true,
+                    preflightCommitment: "confirmed",
+                    maxRetries: 2,
+                });
+
+                console.log("✅ Transaction Sent! Signature:", signature);
+
+                const confirmation = await connection.confirmTransaction(
+                    {
+                        signature,
+                        blockhash: latestBlockhash.blockhash,
+                        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                    },
+                    "confirmed"
+                );
+
+                if (confirmation.value.err === null) {
+                    let paymentResponse = await paymentBundle(response.subscription._id!)
+                    setSubscription({ ...paymentResponse.subscription, tx: paymentResponse?.txHash });
+                    setSuccess(true);
+                } else {
+                    throw new Error(`Error subscription tokens: ${confirmation.value.err}`);
+                }
+            }
+
+            toast.success("Bundle subscribed successfully!");
+        } catch (err: unknown) {
+            console.error("❌ Transaction Error:", err);
+            toast.error((err as Error)?.message || "Failed to subscribe bundle");
+        } finally {
+            setLoading(false);
+            console.log("🧹 Transaction attempt finished");
+        }
+    };
+
+
+
+    const approveSubscription = async () => {
+        if (!publicKey) throw new Error("Wallet not connected");
+
+        try {
+            setLoading(true);
+            let interval = enabled ? duration.key : 1;
+            const response = await prepareSubscription(id, interval);
+            console.log(response.transactions)
             const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
             for (const [i, txData] of response.transactions.entries()) {
@@ -90,29 +170,23 @@ const PaymentForm = () => {
 
                 let tx = new Transaction();
                 const latestBlockhash = await connection.getLatestBlockhash("confirmed");
-                if (txData.type === "approval" || txData.type === "initializeController") {
-                    const instr = txData.data.instruction;
+                const instr = txData.instruction;
 
-                    const keys = instr.keys.map((k: InstructionKey) => ({
-                        pubkey: new PublicKey(k.pubkey),
-                        isSigner: k.isSigner,
-                        isWritable: k.isWritable,
-                    }));
+                const keys = instr.keys.map((k: InstructionKey) => ({
+                    pubkey: new PublicKey(k.pubkey),
+                    isSigner: k.isSigner,
+                    isWritable: k.isWritable,
+                }));
 
-                    const programId = new PublicKey(instr.programId);
-                    const data = Buffer.from(instr.data);
+                const programId = new PublicKey(instr.programId);
+                const data = Buffer.from(instr.data);
 
-                    tx.add(new TransactionInstruction({ keys, programId, data }));
-                    tx.recentBlockhash = latestBlockhash.blockhash;
-                    tx.feePayer = publicKey!;
-                    console.log("   ↳ Approval instruction added");
+                tx.add(new TransactionInstruction({ keys, programId, data }));
+                tx.recentBlockhash = latestBlockhash.blockhash;
+                tx.feePayer = publicKey!;
+                console.log("   ↳ Approval instruction added");
 
-                } else
-                    if (txData.type === "bundle") {
-                        const bundleTx = txData.data.transaction as string;
-                        tx = Transaction.from(Buffer.from(bundleTx, 'base64'))
 
-                    }
 
 
 
@@ -141,21 +215,51 @@ const PaymentForm = () => {
                     throw new Error(`Error subscription tokens: ${confirmation.value.err}`);
                 }
             }
+            setPrepare(true);
+            toast.success("Subscription Approved Successfully!");
 
-            toast.success("Bundle subscribed successfully!");
         } catch (err: unknown) {
             console.error("❌ Transaction Error:", err);
-            toast.error((err as Error)?.message || "Failed to subscribe bundle");
+            toast.error((err as Error)?.message || "Failed to approve subscription");
         } finally {
             setLoading(false);
             console.log("🧹 Transaction attempt finished");
         }
-    };
+    }
 
+
+
+
+    const getBillingCycleDates = () => {
+        const start = new Date();
+        const renew = new Date(start);
+
+        if (enabled) {
+            renew.setMonth(start.getMonth() + duration.key);
+        } else {
+            renew.setMonth(start.getMonth() + 1);
+        }
+
+        const format = (d: Date) =>
+            d.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+
+        return {
+            startDate: format(start),
+            renewDate: format(renew),
+        };
+    };
 
     return (
         <div className="w-full h-auto relative p-4">
             {/* AUTO RENEW */}
+            <h5 className='text-lg text-black' >
+                {bundle?.name}
+            </h5>
+            <br />
             <div className="w-full bg-gray-100 rounded-lg p-4">
                 {/* Auto Renew Section */}
                 <div className="flex items-start justify-between">
@@ -196,27 +300,36 @@ const PaymentForm = () => {
                     </div>
                 ) : ''}
 
+                {/* Billing Cycle */}
                 <div className="mt-6">
                     <p className="text-base text-black mb-2">
                         Billing Cycle
                     </p>
-                    <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm text-foreground">
-                            Start Date
-                        </p>
-                        <p className="text-sm text-black">
-                            October 1, 2025
-                        </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <p className="text-sm text-foreground">
-                            Renew Date
-                        </p>
-                        <p className="text-sm text-black">
-                            March 30, 2025
-                        </p>
-                    </div>
+                    {(() => {
+                        const { startDate, renewDate } = getBillingCycleDates();
+                        return (
+                            <>
+                                <div className="flex items-center justify-between mb-1">
+                                    <p className="text-sm text-foreground">
+                                        Start Date
+                                    </p>
+                                    <p className="text-sm text-black">
+                                        {startDate}
+                                    </p>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <p className="text-sm text-foreground">
+                                        Renew Date
+                                    </p>
+                                    <p className="text-sm text-black">
+                                        {renewDate}
+                                    </p>
+                                </div>
+                            </>
+                        );
+                    })()}
                 </div>
+
             </div>
             <br />
             {/* PAYMENT METHOD */}
@@ -259,14 +372,17 @@ const PaymentForm = () => {
                 <p className="text-base text-forefround">
                     You Pay
                 </p>
-                <h6 className="text-lg text-black">$66.30</h6>
+                <h6 className="text-lg text-black">${bundle?.totalFirstDiscountedPrice}</h6>
             </div>
-            <div className="mt-6 pb-10">
-                <Button loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
+            <div className="mt-6 pb-10 flex flex-col gap-2">
+                <Button disabled={prepare} loading={loading} onClick={approveSubscription} className="" variant="secondary" size="full">
+                    Approve
+                </Button>
+                <Button disabled={!prepare} loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
                     Subscribe
                 </Button>
             </div>
-            <PaymentSuccess open={success} setOpen={setSuccess} />
+            <PaymentSuccess open={success} setOpen={setSuccess} subscription={subscription} />
         </div>
     );
 };

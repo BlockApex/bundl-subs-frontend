@@ -66,10 +66,31 @@ export const getBundleById = async (id: string): Promise<Bundle> => {
 
 export const subscribeBundle = async (id: string) => {
     try {
-        const response = await Api.post(`/subscribe/bundle/${id}`, { numberOfIntervals: 12 });
+        const response = await Api.post(`/subscription`, { bundleId: id });
         return response.data;
     } catch (error) {
         console.error(error);
         throw new Error("Failed to subscribe bundle.");
     }
 };
+
+export const prepareSubscription = async (id: string, intervals: number) => {
+    try {
+        const response = await Api.post(`/subscription/prepare`, { numberOfIntervals: intervals, bundleId: id });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to prepare bundle.");
+    }
+};
+
+
+export const paymentBundle = async (id: string) => {
+    try {
+        const response = await Api.post(`/payment/begin-subscription`, { subscriptionId: id });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to subscribe bundle.");
+    }
+}

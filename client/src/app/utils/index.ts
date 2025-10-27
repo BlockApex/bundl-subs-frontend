@@ -36,3 +36,10 @@ export const lightenColor = (hex: string, percent = 20): string => {
 
   return `rgb(${r}, ${g}, ${b})`;
 };
+
+
+
+export const shortenTx = (tx: string, start = 4, end = 6) => {
+  if (!tx) return '';
+  return `${tx.slice(0, start)}....${tx.slice(-end)}`;
+};

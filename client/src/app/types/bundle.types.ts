@@ -74,19 +74,54 @@ export interface BundleItem {
         _id: string;
         name: string;
         logo: string;
-        category:string;
+        category: string;
     };
-    package:Package[];
-    applicableOffers:Offer[]
+    package: Package;
+    applicableOffers: Offer[]
 }
 
 export interface Bundle {
     _id: string;
     name: string;
-    description:string;
+    description: string;
     color: string;
     totalFirstDiscountedPrice: number;
     totalOriginalPrice: number;
     selectedPackages: BundleItem[];
-    frequency:string;
+    frequency: string;
+}
+
+
+
+
+export interface Subscription {
+    _id: string;
+    bundle: Bundle;
+    user: string;
+    __v: number;
+    createdAt: string;
+    invoices: Invoice[];
+    nextPaymentDate: string;
+    status: "active" | "inactive" | "pending";
+    subscribeDate: string;
+    updatedAt: string;
+    tx: string;
+}
+
+
+
+export interface Invoice {
+    date: string;
+    status: "paid" | "unpaid" | "failed";
+    amount: number;
+    paymentHistory: PaymentHistory[];
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface PaymentHistory {
+    time: string;
+    status: "success" | "failed" | "pending";
+    txHash: string;
 }

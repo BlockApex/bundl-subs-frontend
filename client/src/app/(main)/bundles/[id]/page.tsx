@@ -83,7 +83,7 @@ const BundleDetail = () => {
           Share & Earn <Share2 size={15} />
         </Button>
         <Button variant='dark' size='full' className='flex items-center gap-2' >
-          <Link href='/payment/1' className='flex items-center gap-2'>
+          <Link href={`/payment/${bundle?._id}`} className='flex items-center gap-2'>
             Subscribe <ChevronRight size={18} />
           </Link>
         </Button>

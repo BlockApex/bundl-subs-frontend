@@ -1,66 +1,133 @@
-import React from 'react'
-import { Modal } from '../common/Modal'
+import React from 'react';
 import Image from 'next/image';
-import { ChevronRight, TrendingUp } from 'lucide-react';
+import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
+import { Subscription } from '@/app/types/bundle.types';
+import { ArrowDownToLine, ClipboardCopy, Copy } from 'lucide-react';
+import { shortenTx } from '@/app/utils';
+import Link from 'next/link';
 
 interface PaymentSuccessProps {
     open: boolean;
     setOpen: (o: boolean) => void;
+    subscription: Subscription | null;
 }
 
-const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, setOpen }) => {
+const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, setOpen, subscription }) => {
+    if (!subscription) return null;
+
+    const bundle = subscription.bundle;
+    const formatDate = (date: string) =>
+        new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const originalTotal = bundle.totalOriginalPrice ?? 0;
+    const discountedTotal = bundle.totalFirstDiscountedPrice ?? originalTotal;
+    const savings = originalTotal - discountedTotal;
+    const discountPercent = ((savings / originalTotal) * 100).toFixed(1);
+
+    const nextBillingDate = formatDate(subscription.nextPaymentDate);
+    const txId = shortenTx(subscription.tx ?? '');
+
+    const paymentMethod = 'Debit Wallet'; // static for now
+    const servicesIncluded = bundle.selectedPackages?.length ?? 4;
+
     return (
-        <Modal title='' isOpen={open} onClose={() => setOpen(false)} h={80}>
-            <div className='w-full h-auto relative'>
-                <section className='flex flex-col items-center justify-center gap-4 p-4'>
-                    <Image src='/assets/tick.svg' alt='Success' width={150} height={150} />
-                    <h5 className='text-xl font-semibold text-black'>
-                        Bundle Activated! 🎉
-                    </h5>
-                    <p className='text-base text-foreground font-normal text-center'>
-                        Your subscriptions are now active and ready to use
-                    </p>
-                </section>
+        <Modal title="Payment & Funding" isOpen={open} h={80}>
+            <div className="w-full flex flex-col items-center justify-center p-4">
+                {/* ✅ Success Illustration */}
+                <Image
+                    src="/assets/logo.svg"
+                    alt="Success"
+                    width={120}
+                    height={120}
+                    className="mb-4"
+                />
 
+                {/* ✅ Bundle Title */}
+                <h5 className="text-xl font-semibold text-black text-center">
+                    {bundle.name} Bundle Activated! 🎉
+                </h5>
+                <p className="text-sm text-gray-500 font-normal text-center mb-6">
+                    Your subscriptions are now active and ready to use
+                </p>
 
-                <section className='w-full lg:max-w-lg  mx-auto border border-gray-400 rounded-xl p-4 mt-6'>
-                    <div className='flex items-center justify-between mb-2'>
-                        <p className='text-base text-black font-normal'>Monthly Charge</p>
-                        <p className='text-base text-primary font-normal'>$50.00</p>
-                    </div>
-                    <hr className='border-b border-primary' />
-                    <div className='flex items-center justify-between my-2'>
-                        <p className='text-base text-black font-normal'>Next Billing Date</p>
-                        <p className='text-base text-black font-normal'>November 15, 2025</p>
-                    </div>
-                    <div className='flex items-center justify-between mb-2'>
-                        <p className='text-base text-black font-normal'>Payment Method</p>
-                        <p className='text-base text-black font-normal'>Smart Balance</p>
-                    </div>
-                </section>
-                <section className='w-full lg:max-w-lg mx-auto bg-primary/20 rounded-lg p-4 mt-4  '>
-                    <div className='flex items-start justify-between'>
-                        <div className='flex flex-col gap-2'>
-                            <h6 className='text-lg font-normal text-black mb-0 flex items-center gap-2'><TrendingUp className='text-primary' size={18} />Smart Balance</h6>
-                            <p className='text-sm text-black font-normal p-0 my-0'>
-                                Earning yield to cover your subscriptions
-                            </p>
+                {/* ✅ Receipt Card */}
+                <div className="w-full max-w-md border border-foreground rounded-xl p-4 shadow-sm">
+                    <div className="space-y-1 text-sm text-black">
+                        <div className="flex justify-between">
+                            <span>Original Total</span>
+                            <span className="font-medium">USDC {originalTotal.toFixed(2)}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Bundle Total</span>
+                            <span className="font-medium">USDC {discountedTotal.toFixed(2)}</span>
+                        </div>
+
+                        <div className="flex justify-between text-green-600">
+                            <span>You Save</span>
+                            <span className="font-medium">USDC {savings.toFixed(2)}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Discount %</span>
+                            <span>{discountPercent}%</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Yield Offset</span>
+                            <span>0</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Services Included</span>
+                            <span>{servicesIncluded.toString().padStart(2, '0')}</span>
+                        </div>
+
+                        <hr className="my-2 border-gray-300" />
+
+                        <div className="flex justify-between font-medium">
+                            <span>You Paid</span>
+                            <span>USDC {discountedTotal.toFixed(2)}</span>
+                        </div>
+
+                        <hr className="my-2 border-gray-300" />
+
+                        <div className="flex justify-between">
+                            <span>Next Billing Date</span>
+                            <span>{nextBillingDate}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Payment Method</span>
+                            <span>{paymentMethod}</span>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                            <span>TX ID</span>
+                            <div className="flex items-center gap-1 text-gray-600">
+                                <span>{txId}</span>
+                                <Copy size={14} className="cursor-pointer text-gray-500" />
+                            </div>
                         </div>
                     </div>
-                </section>
-                <section className='w-full lg:max-w-lg  mx-auto border border-gray-400 rounded-xl p-4 my-6'>
-                    <div className='flex items-center justify-between mb-2'>
-                        <p className='text-base text-black font-normal'>Remaining Balance</p>
-                        <p className='text-base text-primary font-normal'>$650.00</p>
+
+                    {/* ✅ Save Receipt Button */}
+                    <div className="flex items-center justify-center mt-4 text-sm text-gray-700 cursor-pointer hover:text-black">
+                        <ArrowDownToLine size={18} />
+                        <span className="ml-2 font-medium">Save Receipt</span>
                     </div>
-                </section>
-                <Button variant='dark' size='full' className='flex items-center gap-2' >
-                    View Dashboard  <ChevronRight size={18} />
-                </Button>
+                </div>
+
+                {/* ✅ Claim Button */}
+                <Link href={`/subscription/claim/${subscription._id}`} className='w-full'>
+                    <Button variant="dark" size="full" className="mt-6 flex items-center justify-center gap-2">
+                        Claim Bundle
+                    </Button>
+                </Link>
             </div>
         </Modal>
-    )
-}
+    );
+};
 
-export default PaymentSuccess
+export default PaymentSuccess;

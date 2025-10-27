@@ -59,9 +59,9 @@ const Wallet = () => {
 
     // ✅ Automatically authenticate after wallet connection
     useEffect(() => {
-        if (connected && !isAuthenticated) {
-            handleAuthFlow();
-        }
+        // if (connected && !isAuthenticated) {
+        //     handleAuthFlow();
+        // }
     }, [connected, isAuthenticated, handleAuthFlow]);
 
 

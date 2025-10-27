@@ -19,7 +19,7 @@ const BundleServices = ({ bundle }: { bundle: Bundle }) => {
             <div className="w-full flex flex-col gap-4">
                 {bundle.selectedPackages.map((pkg:BundleItem) => {
                     const service = pkg.service;
-                    const plan = pkg.package[0];
+                    const plan = pkg.package;
                     const isExpanded = expandedId === service._id;
 
                     const trialOffer = pkg.applicableOffers.find(
