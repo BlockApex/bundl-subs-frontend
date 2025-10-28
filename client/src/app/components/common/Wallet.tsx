@@ -59,9 +59,9 @@ const Wallet = () => {
 
     // ✅ Automatically authenticate after wallet connection
     useEffect(() => {
-        if (connected && !isAuthenticated) {
-            handleAuthFlow();
-        }
+        // if (connected && !isAuthenticated) {
+        //     handleAuthFlow();
+        // }
     }, [connected, isAuthenticated, handleAuthFlow]);
 
 
@@ -96,8 +96,9 @@ const Wallet = () => {
                 <button
                     className="wallet_button"
                     onClick={() => {
-                        if (connected) handleAuthFlow();
-                        else setVisible(true);
+                        // if (connected) handleAuthFlow();
+                        // else 
+                            setVisible(true);
                     }}
                     disabled={isAuthenticating}
                 >
