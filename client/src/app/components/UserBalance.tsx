@@ -13,7 +13,7 @@ const UserBalance = () => {
             </div>
             <h3 className='text-xl lg:text-2xl font-normal text-white mt-4'>
                 {loading ? <Spinner size='sm' /> : ''}
-                {balance ? `${balance} USDC` : ''}
+                {balance ? `${balance} USDC` : '0 USDC'}
             </h3>
             <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 lg:gap-4 mt-2'>
                 <p className='text-primary text-sm lg:text-base flex items-center gap-2'>
