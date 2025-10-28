@@ -11,7 +11,6 @@ import {
     SolanaMobileWalletAdapter,
     createDefaultAddressSelector,
     createDefaultAuthorizationResultCache,
-    createDefaultWalletNotFoundHandler,
 } from '@solana-mobile/wallet-adapter-mobile';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import toast from 'react-hot-toast';
@@ -22,21 +21,21 @@ export const SolanaWalletProvider = ({ children }: { children: React.ReactNode }
 
     const wallets = useMemo(
         () => [
-            // new SolanaMobileWalletAdapter({
-            //     addressSelector: createDefaultAddressSelector(),
-            //     appIdentity: {
-            //         name: 'Bundl Subs',
-            //         uri: 'https://bundl-subs.vercel.app',
-            //         icon: '/logo.svg',
-            //     },
-            //     authorizationResultCache: createDefaultAuthorizationResultCache(),
-            //     chain: 'solana:devnet',
-            //     onWalletNotFound: async () => {
-            //         toast.error('Mobile Wallet Adapter is only supported in Solana Mobile DApp browsers.');
-            //     },
-            // }),
-            // new PhantomWalletAdapter(),
-            // new SolflareWalletAdapter(),
+            new SolanaMobileWalletAdapter({
+                addressSelector: createDefaultAddressSelector(),
+                appIdentity: {
+                    name: 'Bundl Subs',
+                    uri: 'https://bundl-subs.vercel.app',
+                    icon: '/logo.svg',
+                },
+                authorizationResultCache: createDefaultAuthorizationResultCache(),
+                chain: 'solana:devnet',
+                onWalletNotFound: async () => {
+                    toast.error('Mobile Wallet Adapter is only supported in Solana Mobile DApp browsers.');
+                },
+            }),
+            new PhantomWalletAdapter(),
+            new SolflareWalletAdapter(),
         ],
         []
     );

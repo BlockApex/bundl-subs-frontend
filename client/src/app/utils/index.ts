@@ -49,5 +49,5 @@ export const shortenTx = (tx: string, start = 4, end = 6) => {
 
 
 export function isSubscription(item: MyBundle): item is Subscription & { isSubscription: true } {
-  return (item as Subscription).bundle !== undefined && (item as any).isSubscription === true;
+  return (item as Subscription).bundle !== undefined && (item as {isSubscription:boolean}).isSubscription === true;
 }

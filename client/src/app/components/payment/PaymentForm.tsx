@@ -23,15 +23,6 @@ type InstructionKey = {
 };
 
 
-
-interface RpcError {
-    message?: string;
-    logs?: string[];
-    code?: number;
-    data?: unknown;
-}
-
-
 const durations = [
     { key: 3, label: "03 Months" },
     { key: 6, label: "06 Months" },
@@ -71,6 +62,7 @@ const PaymentForm = () => {
     const [bundle, setBundle] = useState<Bundle | null>(null);
     const [enabled, setEnabled] = useState(false);
     const [duration, setDuration] = useState(durations[1]);
+    const [currency , setCurrency] = useState(currencies[0]._id)
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [prepare, setPrepare] = useState(false);
@@ -109,12 +101,10 @@ const PaymentForm = () => {
             setLoading(true);
             const response = await subscribeBundle(id);
             const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
-
-
             for (const [i, txData] of response.transactions.entries()) {
                 console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
 
-                let tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
                 const latestBlockhash = await connection.getLatestBlockhash("confirmed");
 
                 console.log("🚀 Sending transaction...");
@@ -124,7 +114,7 @@ const PaymentForm = () => {
                     maxRetries: 2,
                 });
 
-                console.log("✅ Transaction Sent! Signature:", signature);
+                // console.log("✅ Transaction Sent! Signature:", signature);
 
                 const confirmation = await connection.confirmTransaction(
                     {
@@ -136,7 +126,7 @@ const PaymentForm = () => {
                 );
 
                 if (confirmation.value.err === null) {
-                    let paymentResponse = await paymentBundle(response.subscription._id!)
+                    const  paymentResponse = await paymentBundle(response.subscription._id!)
                     setSubscription({ ...paymentResponse.subscription, tx: paymentResponse?.txHash });
                     setSuccess(true);
                 } else {
@@ -161,7 +151,7 @@ const PaymentForm = () => {
 
         try {
             setLoading(true);
-            let interval = enabled ? duration.key : 1;
+            const  interval = enabled ? duration.key : 1;
             const response = await prepareSubscription(id, interval);
             console.log(response.transactions)
             const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
@@ -169,7 +159,7 @@ const PaymentForm = () => {
             for (const [i, txData] of response.transactions.entries()) {
                 console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
 
-                let tx = new Transaction();
+                const tx = new Transaction();
                 const latestBlockhash = await connection.getLatestBlockhash("confirmed");
                 const instr = txData.instruction;
 
@@ -363,8 +353,8 @@ const PaymentForm = () => {
             <Select
                 label=""
                 options={currencies}
-                value={''}
-                onChange={(value) => null}
+                value={currency}
+                onChange={(value) => setCurrency(value)}
                 placeholder="Select a Currency"
                 error={''}
             />
@@ -383,7 +373,7 @@ const PaymentForm = () => {
                     Subscribe
                 </Button>
             </div>
-            <PaymentSuccess open={success} setOpen={setSuccess} subscription={subscription} />
+            <PaymentSuccess open={success}  subscription={subscription} />
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import { Api } from "../config";
-import { Bundle, CreateBundleRequest, QuoteRequest, Subscription } from "../types/bundle.types";
+import { Bundle, CreateBundleRequest, MyBundle, QuoteRequest, Subscription } from "../types/bundle.types";
 
 
 export const getActiveServices = async () => {
@@ -119,7 +119,7 @@ export const getMyBundles = async () => {
                 : [];
 
         // Merge and remove duplicates by `_id`
-        const allBundlesMap = new Map<string, any>();
+        const allBundlesMap = new Map<string, MyBundle>();
         [...bundles, ...subscriptions].forEach((item) => {
             if (item && item._id) {
                 allBundlesMap.set(item._id, item);

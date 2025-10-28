@@ -18,7 +18,8 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({ open, setOpen }) => {
     const [category, setCategory] = useState(categories[0]);
     const [perk, setPerk] = useState(perks[0]);
     const [discount, setDiscount] = useState(25);
-
+    const [min , setMin] = useState("0");
+        const [max , setMax] = useState("0");
 
 
     return (
@@ -42,8 +43,8 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({ open, setOpen }) => {
                 <section className='w-full flex flex-col gap-3 h-auto p-2 mt-6'>
                     <p className='text-base text-black'>Price Range</p>
                     <div className='flex items-center justify-between gap-4'>
-                        <Input value='' onChange={(e) => null} placeholder='Min' />
-                        <Input value='' onChange={(e) => null} placeholder='Max' />
+                        <Input value={min} onChange={(e) => setMin(e)} placeholder='Min' />
+                        <Input value={max} onChange={(e) => setMax(e)} placeholder='Max' />
                     </div>
                     <p className='text-base text-black'>Discounts</p>
                     <Slider min={0} max={100} step={1} value={discount} onChange={setDiscount} />

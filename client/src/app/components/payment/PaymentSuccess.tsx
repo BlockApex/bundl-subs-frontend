@@ -3,17 +3,16 @@ import Image from 'next/image';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Subscription } from '@/app/types/bundle.types';
-import { ArrowDownToLine, ClipboardCopy, Copy } from 'lucide-react';
+import { ArrowDownToLine, Copy } from 'lucide-react';
 import { shortenTx } from '@/app/utils';
 import Link from 'next/link';
 
 interface PaymentSuccessProps {
     open: boolean;
-    setOpen: (o: boolean) => void;
     subscription: Subscription | null;
 }
 
-const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, setOpen, subscription }) => {
+const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, subscription }) => {
     if (!subscription) return null;
 
     const bundle = subscription.bundle;
