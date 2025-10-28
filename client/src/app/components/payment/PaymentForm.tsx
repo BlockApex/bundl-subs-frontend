@@ -14,6 +14,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Bundle, Subscription } from "@/app/types/bundle.types";
 import { CHAIN } from "@/app/config";
 import { AxiosError } from "axios";
+import { useLogin } from "@/app/hooks/useLogin";
 
 
 
@@ -58,12 +59,14 @@ const methods = [
 ]
 
 const PaymentForm = () => {
+    const { connected, isAuthenticated, loading: loginLoading, handleLogin } = useLogin();
+
     const { id } = useParams<{ id: string }>()
     const { publicKey, sendTransaction } = useWallet();
     const [bundle, setBundle] = useState<Bundle | null>(null);
     const [enabled, setEnabled] = useState(false);
     const [duration, setDuration] = useState(durations[1]);
-    const [currency , setCurrency] = useState(currencies[0]._id)
+    const [currency, setCurrency] = useState(currencies[0]._id)
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [prepare, setPrepare] = useState(false);
@@ -127,7 +130,7 @@ const PaymentForm = () => {
                 );
 
                 if (confirmation.value.err === null) {
-                    const  paymentResponse = await paymentBundle(response.subscription._id!)
+                    const paymentResponse = await paymentBundle(response.subscription._id!)
                     setSubscription({ ...paymentResponse.subscription, tx: paymentResponse?.txHash });
                     setSuccess(true);
                 } else {
@@ -137,7 +140,7 @@ const PaymentForm = () => {
 
             toast.success("Bundle subscribed successfully!");
         } catch (err: unknown) {
-            if(err instanceof AxiosError){
+            if (err instanceof AxiosError) {
                 toast.error(err.response?.data.message)
                 return
             }
@@ -156,7 +159,7 @@ const PaymentForm = () => {
 
         try {
             setLoading(true);
-            const  interval = enabled ? duration.key : 1;
+            const interval = enabled ? duration.key : 1;
             const response = await prepareSubscription(id, interval);
             console.log(response.transactions)
             const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
@@ -215,7 +218,7 @@ const PaymentForm = () => {
             toast.success("Subscription Approved Successfully!");
 
         } catch (err: unknown) {
-            if(err instanceof AxiosError){
+            if (err instanceof AxiosError) {
                 toast.error(err.response?.data.message)
                 return
             }
@@ -374,15 +377,28 @@ const PaymentForm = () => {
                 </p>
                 <h6 className="text-lg text-black">${bundle?.totalFirstDiscountedPrice}</h6>
             </div>
-            <div className="mt-6 pb-10 flex flex-col gap-2">
-                <Button disabled={prepare} loading={loading} onClick={approveSubscription} className="" variant="secondary" size="full">
-                    Approve
+
+            {!connected || !isAuthenticated ? (
+                <Button
+                    onClick={handleLogin}
+                    loading={loginLoading}
+                    variant="secondary"
+                    size="full"
+                    className="mt-4"
+                >
+                    Connect Wallet
                 </Button>
-                <Button disabled={!prepare} loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
-                    Subscribe
-                </Button>
-            </div>
-            <PaymentSuccess open={success}  subscription={subscription} />
+            ) : (
+                <div className="mt-6 pb-10 flex flex-col gap-2">
+                    <Button disabled={prepare} loading={loading} onClick={approveSubscription} className="" variant="secondary" size="full">
+                        Approve
+                    </Button>
+                    <Button disabled={!prepare} loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
+                        Subscribe
+                    </Button>
+                </div>
+            )}
+            <PaymentSuccess open={success} subscription={subscription} />
         </div>
     );
 };
