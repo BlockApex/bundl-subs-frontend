@@ -9,7 +9,7 @@ const TopBar = () => {
                 <Image src='/assets/logo.svg' alt='User' width={40} height={40} className='rounded-full' />
                 <div className='flex flex-col'>
                     <p className='text-base text-foreground font-normal'>Hey,👋</p>
-                    <h6 className='text-lg text-black font-normal'> Bundl</h6>
+                    <h6 className='text-lg text-black font-normal'> Bundler</h6>
                 </div>
             </section>
             <section>
