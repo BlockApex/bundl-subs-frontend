@@ -14,7 +14,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Bundle, Subscription } from "@/app/types/bundle.types";
 import { CHAIN } from "@/app/config";
 import { AxiosError } from "axios";
-import { useLogin } from "@/app/hooks/useLogin";
+
 
 
 
@@ -59,8 +59,6 @@ const methods = [
 ]
 
 const PaymentForm = () => {
-    const { connected, isAuthenticated, loading: loginLoading, handleLogin } = useLogin();
-
     const { id } = useParams<{ id: string }>()
     const { publicKey, sendTransaction } = useWallet();
     const [bundle, setBundle] = useState<Bundle | null>(null);
@@ -377,27 +375,14 @@ const PaymentForm = () => {
                 </p>
                 <h6 className="text-lg text-black">${bundle?.totalFirstDiscountedPrice}</h6>
             </div>
-
-            {!connected || !isAuthenticated ? (
-                <Button
-                    onClick={handleLogin}
-                    loading={loginLoading}
-                    variant="secondary"
-                    size="full"
-                    className="mt-4"
-                >
-                    Connect Wallet
+            <div className="mt-6 pb-10 flex flex-col gap-2">
+                <Button disabled={prepare} loading={loading} onClick={approveSubscription} className="" variant="secondary" size="full">
+                    Approve
                 </Button>
-            ) : (
-                <div className="mt-6 pb-10 flex flex-col gap-2">
-                    <Button disabled={prepare} loading={loading} onClick={approveSubscription} className="" variant="secondary" size="full">
-                        Approve
-                    </Button>
-                    <Button disabled={!prepare} loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
-                        Subscribe
-                    </Button>
-                </div>
-            )}
+                <Button disabled={!prepare} loading={loading} onClick={handleSubscribe} className="" variant="dark" size="full">
+                    Subscribe
+                </Button>
+            </div>
             <PaymentSuccess open={success} subscription={subscription} />
         </div>
     );

@@ -1,15 +1,18 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LogOut, Wallet2 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useAuthStore } from '@/app/store/authStore';
-import { useLogin } from '@/app/hooks/useLogin';
+import { useAuthStore } from '@/app/store/authStore';;
 import toast from 'react-hot-toast';
+import LoginModal from '../LoginModal';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
 const Wallet = () => {
-    const { publicKey, disconnect } = useWallet();
-    const { setAuthenticated } = useAuthStore();
-    const { handleLogin, connected, isAuthenticated, loading } = useLogin();
+    const { publicKey, disconnect, connected } = useWallet();
+    const { isAuthenticated, setAuthenticated } = useAuthStore();
+    const { setVisible } = useWalletModal();
+
+    const [open, setOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -21,6 +24,13 @@ const Wallet = () => {
             toast.error('Failed to logout. Try again.',);
         }
     };
+
+
+    useEffect(() => {
+        if (connected && !isAuthenticated) {
+            setOpen(true)
+        }
+    }, [connected])
 
     return (
         <div className="flex flex-col items-center gap-3">
@@ -38,16 +48,18 @@ const Wallet = () => {
             ) : (
                 <button
                     className="wallet_button"
-                    onClick={handleLogin}
-                    disabled={loading}
+                    onClick={() => {
+                        setVisible(true)
+                    }}
                 >
                     <Wallet2 size={15} />
-                    {loading ? 'Authenticating...' : 'Connect'}
+                    Connect
                 </button>
             )}
             <button className="wallet_button" onClick={handleLogout}>
                 <LogOut />
             </button>
+            <LoginModal open={open} setOpen={setOpen} />
         </div>
     );
 };
