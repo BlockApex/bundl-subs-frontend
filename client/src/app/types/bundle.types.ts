@@ -29,6 +29,7 @@ export interface ClaimedPackage {
     }[];
     createdAt: string; // ISO date string
     updatedAt: string; // ISO date string
+    claimInstructions?:string;
 }
 
 
@@ -119,7 +120,7 @@ export interface Subscription {
     createdAt: string;
     invoices: Invoice[];
     nextPaymentDate: string;
-    status: "active" | "inactive" | "pending";
+    status: "active" | "inactive" | "pending" | 'paused' | 'intended' | 'grace-period' | 'cancelled' | 'suspended';
     subscribeDate: string;
     updatedAt: string;
     tx: string;

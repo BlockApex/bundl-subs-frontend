@@ -20,6 +20,7 @@ interface SubscriptionCardProps {
 
 const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claimedPackages, subscriptionId, refetch }) => {
     const [claimOpen, setClaimOpen] = useState(false);
+    const [insOpen, setInsOpen] = useState(false);
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
     const service = subscription.service;
@@ -27,6 +28,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
     const isClaimed = claimedPackages?.some((p) => p.package._id === plan._id);
     const bg = isClaimed ? 'bg-success/40' : 'bg-warning/40';
     const form = plan.requiredFormFields || [];
+    const instruction = claimedPackages?.find((p) => p.package._id === plan._id)?.claimInstructions ?? null;
 
     // Handle input change
     const handleChange = (fieldName: string, value: string) => {
@@ -81,9 +83,9 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
                         <div className='ps-2'>
                             <h6 className="text-base text-black">{service.name}</h6>
                             <p className="text-sm text-foreground max-w-sm">
-{truncateText(service?.description ?? "", 20)}
+                                {truncateText(service?.description ?? "", 20)}
 
-                                </p>
+                            </p>
                         </div>
                     </div>
                     <h6 className="text-lg text-black">${plan?.amount}/month</h6>
@@ -105,7 +107,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
                 )}
 
                 {isClaimed ? (
-                    <Button variant="dark" size="sm">
+                    <Button onClick={() => setInsOpen(true)} variant="dark" size="sm">
                         View Instruction <ChevronRight size={17} />
                     </Button>
                 ) : (
@@ -126,9 +128,9 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
                             <div className='ps-2'>
                                 <h6 className="text-base text-black">{service.name}</h6>
                                 <p className="text-sm text-foreground max-w-sm">
-{truncateText(service?.description ?? "", 20)}
+                                    {truncateText(service?.description ?? "", 20)}
 
-                                    </p>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -162,6 +164,29 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
                             Activate <ChevronRight size={16} />
                         </Button>
                     </form>
+                </div>
+            </Modal>
+
+
+            {/* Instruction Modal */}
+            <Modal title="" isOpen={insOpen} onClose={() => setInsOpen(false)}>
+                <div className='w-full p-4'>
+                    <h4 className='text-lg text-black text-center mb-4'>Activated 🎉</h4>
+                    <br />
+                    <div className='flex items-center justify-center mb-4'>
+                        <div className="flex items-start gap-2 bg-secondary/20 p-4 rounded-xl">
+                            <Image alt="icon" src={service.logo} width={50} height={50} className="rounded-xl" />
+                            <div className='ps-2'>
+                                <h6 className="text-base text-black">{service.name}</h6>
+                                <p className="text-sm text-foreground max-w-sm">
+                                    {truncateText(service?.description ?? "", 20)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='p-4'>
+                        {instruction ? instruction : ""}
+                    </div>
                 </div>
             </Modal>
         </div>

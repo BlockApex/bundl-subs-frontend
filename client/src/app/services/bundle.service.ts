@@ -182,3 +182,36 @@ export const claimSubscription = async (id: string, data: ClaimPackagePayload) =
         throw error;
     }
 }
+
+export const pauseSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscription/${id}/pause`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+
+export const resumeSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscription/${id}/resume`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+
+
+export const cancelSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscription/${id}/cancel`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

@@ -2,19 +2,13 @@
 import React from 'react'
 import AppLayout from '../../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
-// import { getProfile } from '../../services/auth.service'
 import Image from 'next/image'
+import { useUsdcBalance } from '@/app/hooks/useUsdcBalance'
+import { Spinner } from '@/app/components/common/Spinner'
 
 
 const WalletPage = () => {
-
-    // const getProfileData = async () => {
-    //     const response = await getProfile();
-    //     console.log(response)
-    // }
-    // useEffect(() => {
-    //     getProfileData();
-    // }, [])
+    const { balance, loading } = useUsdcBalance();
 
     return (
         <AppLayout showTopbar={false}>
@@ -27,8 +21,11 @@ const WalletPage = () => {
                     <div className='w-full flex items-center justify-between gap-4 mb-4'>
                         <p className='text-base text-foreground font-normal'>Total Balance</p>
                     </div>
-                    <h3 className='text-xl lg:text-2xl font-normal text-white mt-4'>$6500.00</h3>
-                    <p className='text-sm lg:text-base text-foreground mt-4'>Wallet: <span className='text-white ms-2'>$6500.00</span></p>
+                    <h3 className='text-xl lg:text-2xl font-normal text-white mt-4'>
+                        {loading ? <Spinner size='sm' /> : ''}
+                        {balance ? `${balance} USDC` : ''}
+                    </h3>
+                    {/* <p className='text-sm lg:text-base text-foreground mt-4'>Wallet: <span className='text-white ms-2'>$6500.00</span></p> */}
                     <Image src='/assets/mock/depth-chart.svg' className='absolute top-5 right-5' alt='chart' width={150} height={200} />
                 </div>
                 <div className='w-full bg-dark rounded-xl p-4 my-4 relative flex items-center justify-between'>
@@ -104,7 +101,7 @@ const WalletPage = () => {
 
 
                 <div className='my-4 p-1 flex items-center justify-center'>
-                    <Image src='/assets/mock/chart.png' alt='Chart' width={500} height={500}/>
+                    <Image src='/assets/mock/chart.png' alt='Chart' width={500} height={500} />
                 </div>
 
             </main>
