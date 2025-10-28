@@ -1,129 +1,169 @@
 "use client";
 import AppLayout from "@/app/components/common/AppLayout";
+import { Spinner } from "@/app/components/common/Spinner";
+import { getUserActivity } from "@/app/services/auth.service";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
 
-const activities = [
+interface ActivityItem {
+    bundle: {
+        _id: string;
+        name: string;
+        description: string;
+        color: string;
+        selectedPackages: {
+            service: {
+                _id: string;
+                name: string;
+                logo: string;
+                description: string;
+            };
+            package: {
+                name: string;
+                amount: number;
+                frequency: string;
+            };
+        }[];
+    };
+    amount:number;
+    date: string;
+    text: string;
+    status: string;
+    statusThemeClass: string;
+    type: string;
+}
 
-    {
-        id: 1,
-        title: "Dev Monk Bundle",
-        status: "Activated",
-        description: "Billing paused. Seats at 5/5.",
-        walletType: "Debit Wallet",
-        amount: "29.00",
-        date: "17 Sep 2023",
-        time: "10:34 AM",
-        icon: "/assets/mock/bundle/1.png",
-    },
-    {
-        id: 2,
-        title: "Project Manager Bundle",
-        status: "Paused",
-        description: "Billing paused. Seats at 5/5.",
-        walletType: "Debit Wallet",
-        amount: "6.40",
-        date: "21 Oct 2025",
-        time: "08:34 AM",
-        icon: "/assets/mock/bundle/1.png",
-    },
-    {
-        id: 3,
-        title: "Trader Essentials",
-        status: "Active",
-        description: "Paymed Complete Next renewal on Nov 22, 2025.",
-        walletType: "Smart Balance",
-        amount: "14.95",
-        date: "22 Oct 2025",
-        time: "04:20 PM",
-        icon: "/assets/mock/bundle/1.png",
-    },
-    {
-        id: 4,
-        title: "Biz Ops Bundle",
-        status: "Renewal Due",
-        description: "Invoice RF-1289 due Oct 28, 2025. Auto-pay scheduled",
-        walletType: "Debit Wallet",
-        amount: "49.00",
-        date: "20 Oct 2025",
-        time: "10:34 AM",
-        icon: "/assets/mock/bundle/1.png",
-    },
-    {
-        id: 5,
-        title: "Biz Ops Bundle",
-        status: "Renewal Due",
-        description: "Invoice RF-1289 due Oct 28, 2025. Auto-pay scheduled",
-        walletType: "Debit Wallet",
-        amount: "49.00",
-        date: "20 Oct 2025",
-        time: "10:34 AM",
-        icon: "/assets/mock/bundle/1.png",
-    },
-]
 const statusColors: Record<string, string> = {
-    Activated: "bg-green-100 text-green-700",
-    Active: "bg-green-100 text-green-700",
-    Paused: "bg-teal-100 text-teal-700",
-    "Renewal Due": "bg-yellow-100 text-yellow-700",
+    Success: "bg-green-100 text-green-700",
+    Failed: "bg-red-100 text-red-700",
+    Pending: "bg-yellow-100 text-yellow-700",
 };
 
 const ActivityPage = () => {
+    const [activities, setActivities] = useState<ActivityItem[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const fetchActivities = async () => {
+            try {
+                setLoading(true);
+                const data = await getUserActivity();
+                setActivities(data);
+            } catch (err: unknown) {
+                toast.error(
+                    err instanceof Error
+                        ? err.message || "Failed to fetch activity"
+                        : "Failed to fetch activity"
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchActivities();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="w-full min-h-screen flex justify-center items-center py-8">
+                <Spinner />
+            </div>
+        );
+    }
+
+    if (!activities.length) {
+        return (
+            <div className="w-full min-h-screen text-center py-8 text-gray-500">
+                No activity available.
+            </div>
+        );
+    }
+
     return (
         <AppLayout showTopbar={false}>
-            <main className="w-full min-h-screen bg-white relative overflow-hidden px-4 pb-24">
+            <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden px-4 pb-24">
                 {/* Header */}
-                <div className="flex items-center gap-4 py-4">
-                    <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
+                <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
+                    <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
                         <ChevronLeft className="text-white" />
                     </button>
-                    <h5 className="text-xl font-semibold text-gray-900">Activity</h5>
+                    <h5 className="text-xl font-semibold text-gray-900">
+                        Activity
+                    </h5>
                 </div>
 
-                <section className="w-full">
-                    <div className="flex flex-col gap-3">
-                        {activities.map((item) => (
-                            <div
-                                key={item.id}
-                                className="bg-gray-100 rounded-lg px-4 py-2">
-                                <div className="w-full flex items-center justify-between">
-                                    <p className="text-foreground text-sm">{item.title}</p>
-                                    <span className={`text-sm px-4 py-1 rounded-full font-medium ${statusColors[item.status]}`}>{item.status}</span>
-                                </div>
-                                <div className="w-full flex items-center justify-between mt-2">
-                                    <div className="flex items-start gap-3">
-                                        <Image
-                                            src={item.icon}
-                                            alt={item.title}
-                                            width={40}
-                                            height={40}
-                                            className="rounded-full"
-                                        />
-                                        <div className="flex flex-col gap-1">
-                                            <h4 className="text-sm font-medium text-foreground">
-                                                {item.description.slice(0,20)}
-                                            </h4>
-                                            <span className="text-xs text-black px-2 py-1 border border-foreground rounded-full text-center">Debit Wallet</span>
-                                        </div>
+                {/* Activity List */}
+                <section className="w-full mt-4">
+                    <div className="flex flex-col gap-3 h-[700px] lg:h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent pr-1">
+                        {activities.map((item, idx) => {
+                            const bundle = item.bundle;
+                            const firstPackage = bundle.selectedPackages[0];
+                            const formattedDate = dayjs(item.date).format("DD MMM YYYY");
+                            const formattedTime = dayjs(item.date).format("hh:mm A");
+
+                            return (
+                                <div
+                                    key={idx}
+                                    className="bg-white shadow-sm border border-gray-200 rounded-xl p-4 hover:shadow-md transition"
+                                >
+                                    {/* Top Section */}
+                                    <div className="flex items-center justify-between mb-3">
+                                        <p className="text-sm font-semibold text-gray-900">
+                                            {bundle.name}
+                                        </p>
+                                        <span
+                                            className={`inline-flex w-auto text-xs px-3 py-1 rounded-full font-medium whitespace-nowrap ${statusColors[item.status] || "bg-gray-200 text-gray-700"
+                                                }`}
+                                        >
+                                            {item.status}
+                                        </span>
                                     </div>
 
-                                    <div className="flex flex-col items-end">
-                                        <h6 className="flex items-center gap-1 text-base text-black">
+                                    {/* Main Content */}
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex items-start gap-3">
                                             <Image
-                                                src='/assets/mock/usdc.png'
-                                                width={15}
-                                                height={15}
-                                                alt="usdc"
+                                                src={firstPackage.service.logo}
+                                                alt={firstPackage.service.name}
+                                                width={42}
+                                                height={42}
+                                                className="rounded-full border border-gray-300"
                                             />
-                                            29.00
-                                        </h6>
-                                        <small className="text-xs text-foreground mt-2">17 Sep 2023</small>
-                                        <small className="text-xs text-foreground">10:34 AM</small>
+                                            <div className="flex flex-col">
+                                                <h4 className="text-sm font-medium text-gray-800">
+                                                    {item.text}
+                                                </h4>
+                                                <span className="text-xs text-gray-600 px-2 py-0.5 border border-gray-300 rounded-full mt-1 w-fit">
+                                                    {firstPackage.package.frequency === "monthly"
+                                                        ? "Monthly Billing"
+                                                        : "One-time"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col items-end text-right">
+                                            <div className="flex items-center gap-1 text-base text-gray-900 font-semibold">
+                                                <Image
+                                                    src="/assets/mock/usdc.png"
+                                                    width={16}
+                                                    height={16}
+                                                    alt="usdc"
+                                                />
+                                                {item.amount}
+                                            </div>
+                                            <div className="mt-1 text-xs text-gray-500">
+                                                {formattedDate}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                                {formattedTime}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </section>
             </main>

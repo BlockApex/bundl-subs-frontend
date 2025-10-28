@@ -56,7 +56,7 @@ export const useLogin = () => {
         if (connected && !isAuthenticated && !loading) {
             handleLogin();
         }
-    }, [connected, isAuthenticated, handleLogin]);
+    }, [connected, isAuthenticated, handleLogin, loading]);
 
     return {
         isAuthenticated,

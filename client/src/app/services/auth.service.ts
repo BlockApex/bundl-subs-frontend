@@ -23,14 +23,15 @@ export const login = async (walletAddress: string, signature: string) => {
 }
 
 
-export const getProfile = async () => {
+export const getUserActivity = async () => {
     try {
-        const response = await Api.get("/user/profile");
-        if (!response?.data) throw new Error("Empty response from server.");
+        const response = await Api.get("/user/activity");
         return response.data;
     } catch (error) {
         console.log(error);
-        throw new Error("Failed to fetch profile.");
+        throw new Error("Failed to fetch activity.");
     }
 };
+
+
 

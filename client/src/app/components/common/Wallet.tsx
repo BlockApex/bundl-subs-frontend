@@ -17,7 +17,8 @@ const Wallet = () => {
             setAuthenticated(false);
             toast.success('Logged out successfully.');
         } catch (error) {
-            toast.error('Failed to logout. Try again.');
+            console.log(error)
+            toast.error('Failed to logout. Try again.',);
         }
     };
 
@@ -44,6 +45,9 @@ const Wallet = () => {
                     {loading ? 'Authenticating...' : 'Connect'}
                 </button>
             )}
+            <button className="wallet_button" onClick={handleLogout}>
+                <LogOut />
+            </button>
         </div>
     );
 };
