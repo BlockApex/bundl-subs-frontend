@@ -119,7 +119,7 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, subscription }) =
                 </div>
 
                 {/* ✅ Claim Button */}
-                <Link href={`/subscription/claim/${subscription._id}`} className='w-full'>
+                <Link href={`/subscription/${subscription._id}`} className='w-full'>
                     <Button variant="dark" size="full" className="mt-6 flex items-center justify-center gap-2">
                         Claim Bundle
                     </Button>

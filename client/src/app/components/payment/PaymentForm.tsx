@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Bundle, Subscription } from "@/app/types/bundle.types";
 import { CHAIN } from "@/app/config";
+import { AxiosError } from "axios";
 
 
 
@@ -136,6 +137,10 @@ const PaymentForm = () => {
 
             toast.success("Bundle subscribed successfully!");
         } catch (err: unknown) {
+            if(err instanceof AxiosError){
+                toast.error(err.response?.data.message)
+                return
+            }
             console.error("❌ Transaction Error:", err);
             toast.error((err as Error)?.message || "Failed to subscribe bundle");
         } finally {
@@ -210,6 +215,10 @@ const PaymentForm = () => {
             toast.success("Subscription Approved Successfully!");
 
         } catch (err: unknown) {
+            if(err instanceof AxiosError){
+                toast.error(err.response?.data.message)
+                return
+            }
             console.error("❌ Transaction Error:", err);
             toast.error((err as Error)?.message || "Failed to approve subscription");
         } finally {

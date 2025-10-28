@@ -4,7 +4,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Bundle } from '@/app/types/bundle.types'
 
-const BundleDetailHeader = ({ bundle }: { bundle: Bundle }) => {
+const BundleDetailHeader = ({ bundle, subscription = false }: { bundle: Bundle, subscription?: boolean }) => {
     const router = useRouter()
 
     const totalDiscount = bundle.totalOriginalPrice - bundle.totalFirstDiscountedPrice
@@ -14,7 +14,10 @@ const BundleDetailHeader = ({ bundle }: { bundle: Bundle }) => {
         <div className='w-full bg-primary-dark rounded-b-xl px-4 py-6'>
             <div className='flex items-start gap-4'>
                 <button
-                    onClick={() => router.back()}
+                    onClick={() => {
+                        if(subscription) router.push('/bundles/me')
+                        else router.back()
+                    }}
                     className='w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center hover:bg-primary-100 transition'
                 >
                     <ChevronLeft />

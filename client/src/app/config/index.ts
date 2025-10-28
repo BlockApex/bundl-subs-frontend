@@ -7,6 +7,8 @@ export const BASE_URL = 'https://server-production-fa9f.up.railway.app';
 // export const BASE_URL = 'https://172.18.0.33';
 
 export const CHAIN = process.env.NEXT_PUBLIC_CHAIN || 'devnet';
+export const USDC_ADDRESS = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
+export const SOLANA_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC || 'https://api.devnet.solana.com'
 
 export const Api = axios.create({
   baseURL: BASE_URL,

@@ -1,7 +1,7 @@
 'use client';
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { isColorDark, hexToRGBA, lightenColor, isSubscription } from "../utils";
 import { Bundle, MyBundle } from "../types/bundle.types";
@@ -11,6 +11,7 @@ export interface BundleCardProps {
 }
 
 const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
+  const router = useRouter();
   // ✅ Normalize bundle data — unify access whether it's Subscription or Bundle
   const normalized = isSubscription(bundle) ? bundle.bundle : bundle;
 
@@ -36,27 +37,23 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
   const shadowColor = hexToRGBA(normalized.color, 0.1);
   const lightBg = lightenColor(normalized.color, 35);
 
+
+  const handleRoute = ()=>{
+    router.push(isSubscription(bundle) ? `/subscription/${bundle._id}`:`/bundles/${bundle._id}`)
+  }
   return (
     <div
-      className="w-full h-auto p-4 rounded-xl transition-all duration-300"
+      className="w-full h-auto p-4 rounded-xl transition-all duration-300 cursor-pointer"
       style={{
         backgroundColor: normalized.color,
         boxShadow: `0px 15px 30px ${shadowColor}`,
       }}
+      onClick={()=>handleRoute()}
     >
       <div className="flex items-center justify-between">
         <h5 className={`text-xl font-medium ${textColor}`}>
           {normalized.name}
         </h5>
-
-        <Link href={`/bundles/${normalized._id}`}>
-          <span
-            className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: lightBg }}
-          >
-            <Image src="/assets/arrow.svg" alt="arrow" width={10} height={10} />
-          </span>
-        </Link>
       </div>
 
       <div className="flex items-center gap-2">

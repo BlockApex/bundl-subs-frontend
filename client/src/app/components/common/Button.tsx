@@ -4,7 +4,7 @@ import { Spinner } from "./Spinner";
 
 type ButtonProps = {
     children: React.ReactNode;
-    variant?: "primary" | "secondary" | "danger" | "outline" | "light" | "dark";
+    variant?: "primary" | "secondary" | "danger" | "outline" | "light" | "dark" | 'neutral' | 'success';
     size?: "sm" | "md" | "lg" | "full";
     onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
     disabled?: boolean;
@@ -40,14 +40,18 @@ export const Button: React.FC<ButtonProps> = ({
                         variant === "dark",
                     "bg-secondary text-black hover:bg-secondary/70 active:bg-secondary/80":
                         variant === "secondary",
-                    "bg-red-700 text-white hover:bg-red-600 active:bg-red-700":
+                    "bg-danger/30 text-danger hover:bg-danger/40 active:bg-danger/50 border border-danger":
                         variant === "danger",
+                    "bg-blue-500/20 text-blue-900 hover:bg-blue-500/30 active:bg-blue-500/50 border border-blue-900":
+                        variant === "neutral",
+                    "bg-success/20 text-success hover:bg-success/30 active:bg-success/50 border border-success":
+                        variant === "success",
                     "border border-primary text-primary bg-transparent hover:bg-primary hover:text-white":
                         variant === "outline",
                     "border border-dark text-dark bg-white hover:bg-gray-100 hover:text-primary active:bg-white":
                         variant === "light",
-                        
-                        
+
+
                     // 📏 Size Variations
                     "h-9 px-2 md:px-3": size === "sm",
                     "h-[50px] md:h-[55px] px-14 md:px-14 py-4 md:py-7 min-w-auto lg:min-w-[220px]": size === "md",

@@ -51,3 +51,15 @@ export const shortenTx = (tx: string, start = 4, end = 6) => {
 export function isSubscription(item: MyBundle): item is Subscription & { isSubscription: true } {
   return (item as Subscription).bundle !== undefined && (item as {isSubscription:boolean}).isSubscription === true;
 }
+
+export const truncateText = (text: string, maxLength: number = 20): string => {
+  if (!text) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+};
+
+
+
+export function capitalizeFirstLetter(str:string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}

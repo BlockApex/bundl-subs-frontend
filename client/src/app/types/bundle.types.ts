@@ -14,7 +14,23 @@ export interface Package {
     frequency: string;
     offers: Offer[];
     isActive: boolean;
+    requiredFormFields?: { fieldName: string, fieldType: string, optional: boolean }[]
+
 }
+
+
+export interface ClaimedPackage {
+    _id: string;
+    service: string;
+    package: Package;
+    providedFormFields: {
+        fieldName: string;
+        fieldValue: string;
+    }[];
+    createdAt: string; // ISO date string
+    updatedAt: string; // ISO date string
+}
+
 
 export interface Service {
     _id: string;
@@ -73,6 +89,7 @@ export interface BundleItem {
     service: {
         _id: string;
         name: string;
+        description?: string;
         logo: string;
         category: string;
     };
@@ -106,6 +123,7 @@ export interface Subscription {
     subscribeDate: string;
     updatedAt: string;
     tx: string;
+    claimedPackages?: ClaimedPackage[]
 }
 
 
@@ -128,6 +146,17 @@ export interface PaymentHistory {
 
 
 
-export type MyBundle = 
-  | Bundle 
-  | (Subscription & { isSubscription: true , status:string});
+export type MyBundle =
+    | Bundle
+    | (Subscription & { isSubscription: true, status: string });
+
+
+export interface ClaimPackagePayload {
+    subscription: string;
+    service: string;
+    package: string;
+    providedFormFields: {
+        fieldName: string;
+        fieldValue: string;
+    }[];
+}

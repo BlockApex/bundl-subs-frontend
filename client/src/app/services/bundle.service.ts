@@ -1,5 +1,5 @@
 import { Api } from "../config";
-import { Bundle, CreateBundleRequest, MyBundle, QuoteRequest, Subscription } from "../types/bundle.types";
+import { Bundle, ClaimPackagePayload, CreateBundleRequest, MyBundle, QuoteRequest, Subscription } from "../types/bundle.types";
 
 
 export const getActiveServices = async () => {
@@ -62,6 +62,16 @@ export const getBundleById = async (id: string): Promise<Bundle> => {
 };
 
 
+export const getSubscriptionById = async (id: string): Promise<Subscription> => {
+    try {
+        const response = await Api.get(`/subscription/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch subscription:", error);
+        throw new Error("Failed to fetch subscription.");
+    }
+};
+
 
 
 export const subscribeBundle = async (id: string) => {
@@ -80,7 +90,7 @@ export const prepareSubscription = async (id: string, intervals: number) => {
         return response.data;
     } catch (error) {
         console.error(error);
-        throw new Error("Failed to prepare bundle.");
+        throw error;
     }
 };
 
@@ -91,7 +101,7 @@ export const paymentBundle = async (id: string) => {
         return response.data;
     } catch (error) {
         console.error(error);
-        throw new Error("Failed to subscribe bundle.");
+        throw error;
     }
 }
 
@@ -157,3 +167,18 @@ export const recentActiveBundles = async () => {
         throw new Error("Failed to fetch bundles.");
     }
 };
+
+
+
+
+
+
+export const claimSubscription = async (id: string, data: ClaimPackagePayload) => {
+    try {
+        const response = await Api.post(`/subscription/${id}/claim`, data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

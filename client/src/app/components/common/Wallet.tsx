@@ -44,6 +44,7 @@ const Wallet = () => {
 
             toast.success('Login successful!');
         } catch (err: unknown) {
+            console.log(err, "ERROR........")
             if (err instanceof Error) {
                 console.error('Auth flow failed:', err);
                 toast.error(err.message || 'Authentication failed. Please try again.');
@@ -59,9 +60,9 @@ const Wallet = () => {
 
     // ✅ Automatically authenticate after wallet connection
     useEffect(() => {
-        // if (connected && !isAuthenticated) {
-        //     handleAuthFlow();
-        // }
+        if (connected && !isAuthenticated) {
+            handleAuthFlow();
+        }
     }, [connected, isAuthenticated, handleAuthFlow]);
 
 
@@ -75,7 +76,6 @@ const Wallet = () => {
             toast.error('Failed to logout. Try again.');
         }
     }
-
 
     return (
         <div className="flex flex-col items-center gap-3">
@@ -96,9 +96,10 @@ const Wallet = () => {
                 <button
                     className="wallet_button"
                     onClick={() => {
-                        // if (connected) handleAuthFlow();
-                        // else 
-                            setVisible(true);
+                        if (connected) handleAuthFlow();
+                        else setVisible(true);
+
+                        
                     }}
                     disabled={isAuthenticating}
                 >
