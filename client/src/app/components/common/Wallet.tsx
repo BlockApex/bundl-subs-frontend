@@ -26,11 +26,11 @@ const Wallet = () => {
     };
 
 
-    useEffect(() => {
-        if (connected && !isAuthenticated) {
-            setOpen(true)
-        }
-    }, [connected, isAuthenticated])
+    // useEffect(() => {
+    //     if (connected && !isAuthenticated) {
+    //         setOpen(true)
+    //     }
+    // }, [connected, isAuthenticated])
 
     return (
         <div className="flex flex-col items-center gap-3">
@@ -49,6 +49,7 @@ const Wallet = () => {
                 <button
                     className="wallet_button"
                     onClick={() => {
+                        handleLogout()
                         setVisible(true)
                     }}
                 >
