@@ -4,12 +4,12 @@ import React from 'react'
 
 
 const shades = [
-  "#FFBD15", // warm amber
-  "#119576", // teal green
-  "#E63946", // rich coral red
-  "#457B9D", // cool blue-gray
-  "#9B5DE5", // vibrant violet
-  "#06D6A0"  // bright mint green
+  "#119576", // warm amber
+  "#FFBD15", // teal green
+  "#944AEE", // rich coral red
+  "#78D2FF", // cool blue-gray
+  "#6DE4A2", // vibrant violet
+  "#FF8D7E"  // bright mint green
 ];
 
 

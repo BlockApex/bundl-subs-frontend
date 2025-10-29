@@ -1,4 +1,4 @@
-import { MyBundle, Subscription } from "../types/bundle.types";
+import { Bundle, MyBundle, Subscription } from "../types/bundle.types";
 
 export const isColorDark = (hex: string): boolean => {
   hex = hex.replace("#", "");
@@ -48,7 +48,7 @@ export const shortenTx = (tx: string, start = 4, end = 6) => {
 
 
 
-export function isSubscription(item: MyBundle): item is Subscription & { isSubscription: true } {
+export function isSubscription(item: Subscription|Bundle): item is Subscription & { isSubscription: true } {
   return (item as Subscription).bundle !== undefined && (item as {isSubscription:boolean}).isSubscription === true;
 }
 

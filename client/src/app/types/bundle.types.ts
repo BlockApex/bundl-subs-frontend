@@ -125,6 +125,7 @@ export interface Subscription {
     updatedAt: string;
     tx: string;
     claimedPackages?: ClaimedPackage[]
+    isSubscription?:boolean;
 }
 
 

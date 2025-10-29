@@ -56,9 +56,9 @@ const Wallet = () => {
                     Connect
                 </button>
             )}
-            <button className="wallet_button" onClick={handleLogout}>
+            {/* <button className="wallet_button" onClick={handleLogout}>
                 <LogOut />
-            </button>
+            </button> */}
             <LoginModal open={open} setOpen={setOpen} />
         </div>
     );

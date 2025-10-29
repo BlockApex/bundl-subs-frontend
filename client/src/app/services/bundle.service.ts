@@ -107,59 +107,41 @@ export const paymentBundle = async (id: string) => {
 
 
 export const getMyBundles = async () => {
-    try {
-        // Fetch bundles and subscriptions concurrently
-        const [bundlesRes, subsRes] = await Promise.allSettled([
-            Api.get('/bundle'),
-            Api.get('/subscription'),
-        ]);
+  try {
+    // Fetch subscriptions only
+    const subsRes = await Api.get('/subscription');
 
-        // Extract data safely
-        const bundles =
-            bundlesRes.status === 'fulfilled' && Array.isArray(bundlesRes.value.data)
-                ? bundlesRes.value.data
-                : [];
+    // Force-cast to keep compatibility with existing MyBundle[] type
+    const subscriptions =
+      Array.isArray(subsRes.data)
+        ? subsRes.data.map((s: any) => ({
+            ...s,
+            isSubscription: true,
+          }))
+        : [];
 
-        const subscriptions =
-            subsRes.status === 'fulfilled' && Array.isArray(subsRes.value.data)
-                ? subsRes.value.data.map((s: Subscription) => ({
-                    ...s,
-                    isSubscription: true,
-                }))
-                : [];
-
-        // Merge and remove duplicates by `_id`
-        const allBundlesMap = new Map<string, MyBundle>();
-        [...bundles, ...subscriptions].forEach((item) => {
-            if (item && item._id) {
-                allBundlesMap.set(item._id, item);
-            }
-        });
-
-        const allBundles = Array.from(allBundlesMap.values());
-
-        // If nothing found
-        if (allBundles.length === 0) {
-            console.warn('No bundles or subscriptions found.');
-            return [];
-        }
-
-        return allBundles;
-    } catch (error) {
-        console.error('❌ Failed to fetch bundles:', error);
-        return []; // Return empty array to avoid breaking UI
+    if (subscriptions.length === 0) {
+      console.warn('No subscriptions found.');
+      return [];
     }
+
+    // ✅ Return type compatible with MyBundle[]
+    return subscriptions as MyBundle[];
+  } catch (error) {
+    console.error('❌ Failed to fetch subscriptions:', error);
+    return [] as MyBundle[];
+  }
 };
+
 
 export const recentActiveBundles = async () => {
     try {
         const response = await Api.get("/subscription");
-        console.log(response , "HELLO RESPONSE......")
         // ✅ Ensure response.data is an array
         const data = Array.isArray(response.data) ? response.data : [];
-
+        let filtered = data.filter((s)=>s.status === 'active');
         // ✅ Return only up to 3 items
-        const recentBundles = data.length > 3 ? data.slice(0, 3) : data;
+        const recentBundles =  filtered.length > 3 ? filtered.slice(0, 3) : filtered;
 
         return recentBundles;
     } catch (error) {

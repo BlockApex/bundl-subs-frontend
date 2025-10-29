@@ -11,9 +11,9 @@ import { Spinner } from "@/app/components/common/Spinner";
 import { isSubscription } from "@/app/utils";
 
 const statuses = [
-  { id: "all", label: "All" },
+  // { id: "all", label: "All" },
   { id: "active", label: "Active" },
-    { id: "intended", label: "Draft" },
+    // { id: "intended", label: "Draft" },
   { id: "paused", label: "Paused" },
   { id: "grace-period", label: "In Grace Period" },
   { id: "cancelled", label: "Cancelled" },

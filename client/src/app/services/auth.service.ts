@@ -34,4 +34,16 @@ export const getUserActivity = async () => {
 };
 
 
+export const getUserStats = async () => {
+    try {
+        const response = await Api.get("/user/profile-stats");
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Failed to fetch stats.");
+    }
+};
+
+
+
 

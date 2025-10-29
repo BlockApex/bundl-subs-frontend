@@ -1,15 +1,53 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
-import Image from 'next/image'
-import { useUsdcBalance } from '@/app/hooks/useUsdcBalance'
 import { Spinner } from '@/app/components/common/Spinner'
+import { getUserStats } from '@/app/services/auth.service'
+import toast from 'react-hot-toast'
+import UserBalance from '@/app/components/UserBalance'
+import Link from 'next/link'
 
 
 const WalletPage = () => {
-    const { balance, loading } = useUsdcBalance();
+    const [_loading, _setLoading] = useState<boolean>(true);
+    const [stats, setStats] = useState<any>(null);
 
+    useEffect(() => {
+        const fetchActivities = async () => {
+            try {
+                _setLoading(true);
+                const data = await getUserStats();
+                console.log(data);
+                setStats(data);
+            } catch (err: unknown) {
+                toast.error(
+                    err instanceof Error
+                        ? err.message || "Failed to fetch stats"
+                        : "Failed to fetch stats"
+                );
+            } finally {
+                _setLoading(false);
+            }
+        };
+        fetchActivities();
+    }, []);
+
+    if (_loading) {
+        return (
+            <div className="w-full min-h-screen flex justify-center items-center py-8">
+                <Spinner />
+            </div>
+        );
+    }
+
+    if (!stats) {
+        return (
+            <div className="w-full min-h-screen text-center py-8 text-gray-500">
+                No stats available.
+            </div>
+        );
+    }
     return (
         <AppLayout showTopbar={false}>
             <main className="w-full min-h-screen relative overflow-hidden p-4">
@@ -17,20 +55,10 @@ const WalletPage = () => {
                     Account Summary
                 </h5>
                 <br />
-                <div className='w-full bg-dark rounded-xl p-4 mt-2 relative'>
-                    <div className='w-full flex items-center justify-between gap-4 mb-4'>
-                        <p className='text-base text-foreground font-normal'>Total Balance</p>
-                    </div>
-                    <h3 className='text-xl lg:text-2xl font-normal text-white mt-4'>
-                        {loading ? <Spinner size='sm' /> : ''}
-                        {balance ? `${balance} USDC` : ''}
-                    </h3>
-                    {/* <p className='text-sm lg:text-base text-foreground mt-4'>Wallet: <span className='text-white ms-2'>$6500.00</span></p> */}
-                    <Image src='/assets/mock/depth-chart.svg' className='absolute top-5 right-5' alt='chart' width={150} height={200} />
-                </div>
+                <UserBalance lastData={stats?.lastPaymentDate} paymentsDueNext30Days={stats?.paymentsDueNext30Days} />
                 <div className='w-full bg-dark rounded-xl p-4 my-4 relative flex items-center justify-between'>
-                    <h6 className='text-lg text-white'>Referral Bonus +$25</h6>
-                    <p className='text-base text-foreground flex items-center gap-2'> <span className='w-4 h-4 bg-success/10 rounded-full flex items-center justify-center'><span className='w-2 h-2 bg-success rounded-full block'></span></span> (2 Active Referrals)</p>
+                    <h6 className='text-lg text-white'>Referral Bonus +0</h6>
+                    <p className='text-base text-foreground flex items-center gap-2'> <span className='w-4 h-4 bg-success/10 rounded-full flex items-center justify-center'><span className='w-2 h-2 bg-success rounded-full block'></span></span> (0 Active Referrals)</p>
                 </div>
                 <div className='w-full bg-primary/20 rounded-lg p-4 mt-4  '>
                     <div className='w-full flex items-center justify-between gap-4 mb-4'>
@@ -58,25 +86,27 @@ const WalletPage = () => {
                             Important: Yields are estimates, not guaranteed. Actual returns may vary based on market conditions. Monitor your coverage ratio regularly.
                         </p>
                     </div>
-                    <span className='bg-primary-dark px-3 py-1 rounded-full text-white'>Join Waitlist</span>
+                    <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+                        <span className='bg-primary-dark px-3 py-1 rounded-full text-white'>Join Waitlist</span>
+                    </Link>
                 </div>
                 <div className="w-full flex items-stretch justify-between gap-4 mt-6">
                     <div className="flex-1 border border-gray-300 rounded-xl flex flex-col items-start gap-2 p-4">
                         <DollarSign className="text-danger" />
                         <p className="text-foreground font-normal text-base">Monthly Spend</p>
-                        <p className="text-danger font-normal text-base">$47.32</p>
+                        <p className="text-danger font-normal text-base">${stats?.totalMonthlySpending}</p>
                     </div>
 
                     <div className="flex-1 border border-gray-300 rounded-xl flex flex-col items-start gap-2 p-4">
                         <Sparkle className="text-primary" />
                         <p className="text-foreground font-normal text-base">Total Savings</p>
-                        <p className="text-primary font-normal text-base">$8.18</p>
+                        <p className="text-primary font-normal text-base">${stats?.totalMonthlySavings}</p>
                     </div>
 
                     <div className="flex-1 border border-gray-300 rounded-xl flex flex-col items-start gap-2 p-4">
                         <Wallet2 className="text-foreground" />
                         <p className="text-foreground font-normal text-base">Next Bill</p>
-                        <p className="text-black font-normal text-base">$47.32</p>
+                        <p className="text-black font-normal text-base">${stats?.paymentsDueNext30Days}</p>
                     </div>
                 </div>
                 <div className='my-4 p-1'>
@@ -98,12 +128,6 @@ const WalletPage = () => {
                         </div>
                     </div>
                 </div>
-
-
-                <div className='my-4 p-1 flex items-center justify-center'>
-                    <Image src='/assets/mock/chart.png' alt='Chart' width={500} height={500} />
-                </div>
-
             </main>
         </AppLayout>
     )

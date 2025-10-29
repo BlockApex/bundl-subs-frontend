@@ -6,17 +6,17 @@ import { Button } from '../common/Button'
 const data = [
     {
         title: '10%',
-        count: '3+',
+        count: '2+',
         bg: 'bg-[linear-gradient(135deg,rgba(187,115,0,0.2)_0%,rgba(0,187,167,0.05)_100%)]'
     },
     {
         title: '15%',
-        count: '5+',
+        count: '3+',
         bg: 'bg-[linear-gradient(135deg,rgba(0,184,219,0.2)_0%,rgba(0,184,219,0.05)_100%)]'
     },
     {
         title: '20%',
-        count: '8+',
+        count: '5+',
         bg: 'bg-[linear-gradient(135deg,rgba(43,127,255,0.2)_0%,rgba(43,127,255,0.55)_100%)]'
     },
 ]
@@ -48,6 +48,9 @@ const Plans: React.FC<PlansProps> = ({ onClick }) => {
                     {data.map((p, i) => {
                         return (
                             <div className={`w-full  min-h-[220px] lg:min-h-[300px] p-4 flex flex-col items-center justify-center gap-2 rounded-xl ${p.bg}`} key={i}>
+                                <p className='text-base text-foreground font-normal text-center '>
+                                    Upto
+                                </p>
                                 <h1 className='text-3xl lg:text-6xl  font-normal text-black text-center'>
                                     {p.title}
                                 </h1>
