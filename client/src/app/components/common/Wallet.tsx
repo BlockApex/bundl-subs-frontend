@@ -30,7 +30,7 @@ const Wallet = () => {
         if (connected && !isAuthenticated) {
             setOpen(true)
         }
-    }, [connected])
+    }, [connected, isAuthenticated])
 
     return (
         <div className="flex flex-col items-center gap-3">
@@ -56,6 +56,9 @@ const Wallet = () => {
                     Connect
                 </button>
             )}
+            <button className="wallet_button" onClick={handleLogout}>
+                <LogOut />
+            </button>
             <LoginModal open={open} setOpen={setOpen} />
         </div>
     );

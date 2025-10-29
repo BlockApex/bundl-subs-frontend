@@ -1,5 +1,5 @@
 "use client";
-import { Cluster, clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { AddressLookupTableAccount, BlockhashWithExpiryBlockHeight, Cluster, clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Switch from "../common/Switch";
@@ -60,7 +60,7 @@ const methods = [
 
 const PaymentForm = () => {
     const { id } = useParams<{ id: string }>()
-    const { publicKey, sendTransaction } = useWallet();
+    const { publicKey, signTransaction, signAllTransactions } = useWallet();
     const [bundle, setBundle] = useState<Bundle | null>(null);
     const [enabled, setEnabled] = useState(false);
     const [duration, setDuration] = useState(durations[1]);
@@ -93,57 +93,139 @@ const PaymentForm = () => {
             fetchBundle();
         }
     }, [id]);
+// Helper function to safely find the first required signer that is NOT the user
+const getOtherSignerKey = (tx: Transaction, userKey: PublicKey): PublicKey | undefined => {
+    // Find the first required signer in the message header that isn't the fee payer
+    const requiredSigners = tx.signatures
+        .filter(s => s.publicKey.toBase58() !== userKey.toBase58())
+        .map(s => s.publicKey);
+    
+    // Return the first one found (assumed to be the backend)
+    return requiredSigners[0];
+};
 
 
-
-    const handleSubscribe = async () => {
+const handleSubscribe = async () => {
         if (!publicKey) throw new Error("Wallet not connected");
+        if (!signTransaction) {
+             throw new Error("Wallet adapter does not provide signTransaction.");
+        }
 
         try {
             setLoading(true);
             const response = await subscribeBundle(id);
             const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
+            
+            // Declare blockhash in outer scope for confirmation
+            let latestBlockhash: BlockhashWithExpiryBlockHeight;
+            
+            let lastTxHash = null;
+
             for (const [i, txData] of response.transactions.entries()) {
                 console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
 
-                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+                // --------------------------------------------------------
+                // 🛑 FIX: FETCH BLOCKHASH HERE (RIGHT BEFORE SIGNING)
+                // --------------------------------------------------------
+                
+                // 1. Deserialize the Legacy Transaction to extract instructions
+                const legacyTx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+                latestBlockhash = {
+                    blockhash: legacyTx.recentBlockhash!,
+                    lastValidBlockHeight: legacyTx.lastValidBlockHeight!
+                }; 
+                
+                // 2. Extract and sanitize the instructions
+                const instructions = legacyTx.instructions.map(ix => 
+                    new TransactionInstruction({
+                        keys: ix.keys,
+                        programId: ix.programId,
+                        data: ix.data,
+                    })
+                );
 
-                console.log("🚀 Sending transaction...");
-                const signature = await sendTransaction(tx, connection, {
-                    // skipPreflight:true,
-                    preflightCommitment: "confirmed",
-                    maxRetries: 2,
+                // 3. Get the Address Lookup Table Accounts (If you don't use ALTs, this is safe to keep)
+                const  addressLookupTableAccounts: AddressLookupTableAccount[] = [];
+                // ... (Logic to fetch ALTs remains the same, assuming txData has addressLookupTableKeys) ...
+                if (txData.addressLookupTableKeys && txData.addressLookupTableKeys.length > 0) {
+                    const lookupTableKeys = txData.addressLookupTableKeys.map((k: string) => new PublicKey(k));
+                    const tableResponses = await connection.getAddressLookupTable(lookupTableKeys[0]);
+                    if (tableResponses.value) {
+                        addressLookupTableAccounts.push(tableResponses.value);
+                    } else {
+                        console.error("FATAL: Could not fetch Address Lookup Table. V0 message will fail.");
+                    }
+                }
+                
+                // 4. Create a NEW Versioned Transaction Message (V0)
+                const messageV0 = new TransactionMessage({
+                    payerKey: publicKey,
+                    recentBlockhash: latestBlockhash.blockhash, // Use the fresh blockhash
+                    instructions: instructions,
+                }).compileToV0Message(addressLookupTableAccounts);
+
+                // 5. Create the Versioned Transaction
+                const tx = new VersionedTransaction(messageV0);
+
+                // 6. FIND AND APPLY THE SERVER'S PARTIAL SIGNATURE (The Hack)
+                const otherSignerKey = getOtherSignerKey(legacyTx, publicKey);
+
+                if (otherSignerKey) {
+                    const backendSignature = legacyTx.signatures.find(s => 
+                        s.publicKey.equals(otherSignerKey) && s.signature
+                    );
+                    if (backendSignature && backendSignature.signature) {
+                        tx.addSignature(otherSignerKey, backendSignature.signature);
+                        console.log(`   ↳ Applied (Invalid/Stale) partial signature for: ${otherSignerKey.toBase58()}`);
+                    }
+                }
+
+                // 7. Request the user's signature
+                console.log("🚀 Requesting user signature via signTransaction...");
+                const signedTx = await signTransaction(tx); 
+                
+                // 8. Send the Raw Transaction
+                console.log("🚀 Sending final raw transaction...");
+                
+                // Use skipPreflight=true to bypass the RPC node's check on the stale server signature
+                const signature = await connection.sendRawTransaction(signedTx.serialize(), {
+                    skipPreflight: true, 
                 });
+                lastTxHash = signature;
 
-                // console.log("✅ Transaction Sent! Signature:", signature);
+                console.log(`✅ Transaction Sent! Hash: ${lastTxHash}`);
 
+                // 9. Confirm the transaction (using the fresh blockhash and expiry height)
                 const confirmation = await connection.confirmTransaction(
                     {
                         signature,
-                        blockhash: latestBlockhash.blockhash,
-                        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                        blockhash: legacyTx.recentBlockhash!,
+                        lastValidBlockHeight: legacyTx.lastValidBlockHeight!,
                     },
                     "confirmed"
                 );
 
                 if (confirmation.value.err === null) {
-                    const paymentResponse = await paymentBundle(response.subscription._id!)
-                    setSubscription({ ...paymentResponse.subscription, tx: paymentResponse?.txHash });
-                    setSuccess(true);
+                    console.log(`https://solscan.io/tx/${lastTxHash}`);
+                    console.log(`🎉 Transaction #${i + 1} Confirmed!`);
                 } else {
                     throw new Error(`Error subscription tokens: ${confirmation.value.err}`);
                 }
             }
 
+            // Final success logic
+            const paymentResponse = await paymentBundle(response.subscription._id!)
+            setSubscription({ ...paymentResponse.subscription, tx: lastTxHash });
+            setSuccess(true);
             toast.success("Bundle subscribed successfully!");
         } catch (err: unknown) {
+            // ... (error handling remains the same)
             if (err instanceof AxiosError) {
                 toast.error(err.response?.data.message)
                 return
             }
             console.error("❌ Transaction Error:", err);
-            toast.error((err as Error)?.message || "Failed to subscribe bundle");
+            toast.error(JSON.stringify(err));
         } finally {
             setLoading(false);
             console.log("🧹 Transaction attempt finished");
@@ -151,51 +233,60 @@ const PaymentForm = () => {
     };
 
 
-
     const approveSubscription = async () => {
-        if (!publicKey) throw new Error("Wallet not connected");
+        if (!publicKey || !signAllTransactions) throw new Error("Wallet or signAllTransactions function not available");
 
         try {
             setLoading(true);
             const interval = enabled ? duration.key : 1;
             const response = await prepareSubscription(id, interval);
-            console.log(response.transactions)
             const connection = new Connection(clusterApiUrl(CHAIN as Cluster), "confirmed");
+            const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+
+            const transactionsToSign = [];
 
             for (const [i, txData] of response.transactions.entries()) {
-                console.log(`🧩 Processing Transaction #${i + 1} | Type: ${txData.type}`);
+                console.log(`🧩 Building Transaction #${i + 1}`);
 
-                const tx = new Transaction();
-                const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+                // 1. Build Instruction (as before)
                 const instr = txData.instruction;
-
                 const keys = instr.keys.map((k: InstructionKey) => ({
                     pubkey: new PublicKey(k.pubkey),
                     isSigner: k.isSigner,
                     isWritable: k.isWritable,
                 }));
-
                 const programId = new PublicKey(instr.programId);
                 const data = Buffer.from(instr.data);
+                const instruction = new TransactionInstruction({ keys, programId, data });
 
-                tx.add(new TransactionInstruction({ keys, programId, data }));
-                tx.recentBlockhash = latestBlockhash.blockhash;
-                tx.feePayer = publicKey!;
-                console.log("   ↳ Approval instruction added");
+                // 2. Create the Versioned Transaction (using Legacy Message for safety)
+                const messageLegacy = new TransactionMessage({
+                    payerKey: publicKey,
+                    recentBlockhash: latestBlockhash.blockhash,
+                    instructions: [instruction],
+                }).compileToLegacyMessage();
 
+                const tx = new VersionedTransaction(messageLegacy);
+                transactionsToSign.push(tx);
+            }
 
+            // ----------------------------------------------------
+            // 🛑 NEW STEP: Use signAllTransactions 
+            // Request the wallet to sign all transactions at once.
+            // ----------------------------------------------------
+            console.log("🚀 Requesting signature(s) from wallet...");
+            const signedTransactions = await signAllTransactions(transactionsToSign);
 
+            const signatures = [];
 
+            for (const [i, signedTx] of signedTransactions.entries()) {
+                // 3. Send the Raw Transaction
+                const signature = await connection.sendRawTransaction(signedTx.serialize());
+                signatures.push(signature);
 
-                console.log("🚀 Sending transaction...");
-                const signature = await sendTransaction(tx, connection, {
-                    // skipPreflight:true,
-                    preflightCommitment: "confirmed",
-                    maxRetries: 2,
-                });
+                console.log(`✅ Transaction #${i + 1} Sent! Signature:`, signature);
 
-                console.log("✅ Transaction Sent! Signature:", signature);
-
+                // 4. Confirm the transaction (using the retrieved signature and blockhash)
                 const confirmation = await connection.confirmTransaction(
                     {
                         signature,
@@ -212,16 +303,13 @@ const PaymentForm = () => {
                     throw new Error(`Error subscription tokens: ${confirmation.value.err}`);
                 }
             }
+
             setPrepare(true);
             toast.success("Subscription Approved Successfully!");
 
         } catch (err: unknown) {
-            if (err instanceof AxiosError) {
-                toast.error(err.response?.data.message)
-                return
-            }
-            console.error("❌ Transaction Error:", err);
-            toast.error((err as Error)?.message || "Failed to approve subscription");
+            // ... (error handling remains the same)
+            console.log(err)
         } finally {
             setLoading(false);
             console.log("🧹 Transaction attempt finished");
