@@ -65,8 +65,10 @@ const ReviewPage = () => {
       const response = await createBundle(data);
       console.log(response)
       toast.success("Bundle created successfully!");
-      clearBundle();
       router.push(`/payment/${response?._id}`)
+      setTimeout(()=>{
+              clearBundle();
+      },1000)
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message || "Failed to create bundle");

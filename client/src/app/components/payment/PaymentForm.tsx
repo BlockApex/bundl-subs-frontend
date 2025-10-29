@@ -33,8 +33,8 @@ const durations = [
 
 
 const currencies = [
+        { _id: "usdc", title: "USDC" },
     { _id: "sol", title: "Solana" },
-    { _id: "usdc", title: "USDC" },
 ];
 
 const methods = [
@@ -406,6 +406,7 @@ const handleSubscribe = async () => {
                 onChange={(value) => setCurrency(value)}
                 placeholder="Select a Currency"
                 error={''}
+                disabled
             />
             <br />
             <div className="w-full flex items-center justify-between border border-gray-300 p-4 rounded-xl">

@@ -39,7 +39,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
 
 
   const handleRoute = ()=>{
-    router.push(isSubscription(bundle) ? `/subscription/${bundle._id}`:`/bundles/${bundle._id}`)
+    router.push(isSubscription(bundle)  && bundle.status !== 'intended' ? `/subscription/${bundle._id}`:`/bundles/${bundle._id}`)
   }
   return (
     <div

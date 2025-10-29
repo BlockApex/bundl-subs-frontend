@@ -15,7 +15,7 @@ const statuses = [
   { id: "active", label: "Active" },
   { id: "paused", label: "Paused" },
   { id: "grace", label: "In Grace Period" },
-  { id: "canceled", label: "Canceled" },
+  { id: "cancelled", label: "Cancelled" },
 ];
 
 const ActiveBundles = () => {
