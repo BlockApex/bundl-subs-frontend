@@ -13,8 +13,9 @@ import { isSubscription } from "@/app/utils";
 const statuses = [
   { id: "all", label: "All" },
   { id: "active", label: "Active" },
+    { id: "intended", label: "Draft" },
   { id: "paused", label: "Paused" },
-  { id: "grace", label: "In Grace Period" },
+  { id: "grace-period", label: "In Grace Period" },
   { id: "cancelled", label: "Cancelled" },
 ];
 

@@ -3,7 +3,7 @@ import { Sparkle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { isColorDark, hexToRGBA, lightenColor, isSubscription } from "../utils";
+import { isColorDark, hexToRGBA, lightenColor, isSubscription, capitalizeFirstLetter } from "../utils";
 import { Bundle, MyBundle } from "../types/bundle.types";
 
 export interface BundleCardProps {
@@ -38,8 +38,16 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
   const lightBg = lightenColor(normalized.color, 35);
 
 
-  const handleRoute = ()=>{
-    router.push(isSubscription(bundle)  && bundle.status !== 'intended' ? `/subscription/${bundle._id}`:`/bundles/${bundle._id}`)
+  const handleRoute = () => {
+    let route;
+    if (isSubscription(bundle) && bundle.status !== 'intended') {
+      route = `/subscription/${bundle._id}`
+    } else if (isSubscription(bundle) && bundle.status === 'intended') {
+      route = `/bundles/${bundle.bundle._id}`
+    } else {
+      route = `/bundles/${bundle._id}`
+    }
+    router.push(route)
   }
   return (
     <div
@@ -48,7 +56,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
         backgroundColor: normalized.color,
         boxShadow: `0px 15px 30px ${shadowColor}`,
       }}
-      onClick={()=>handleRoute()}
+      onClick={() => handleRoute()}
     >
       <div className="flex items-center justify-between">
         <h5 className={`text-xl font-medium ${textColor}`}>
@@ -108,7 +116,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
             className={`text-xs font-medium px-2 py-1 rounded-md ${textColor}`}
             style={{ backgroundColor: lightBg }}
           >
-            Subscription
+            {capitalizeFirstLetter(bundle?.status === 'intended' ? 'draft': bundle.status)}
           </span>
         )}
       </div>

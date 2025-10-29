@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,8 +8,10 @@ import { recentActiveBundles } from '@/app/services/bundle.service';
 import { Subscription } from '@/app/types/bundle.types';
 import { Spinner } from '@/app/components/common/Spinner';
 import toast from 'react-hot-toast';
+import { capitalizeFirstLetter } from '../utils';
 
 const ActiveBundles = () => {
+  const router = useRouter();
   const [bundles, setBundles] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,6 +32,11 @@ const ActiveBundles = () => {
   }, []);
 
   const hasBundles = bundles && bundles.length > 0;
+
+
+  const handleRoute = (bundle: Subscription) => {
+    router.push(bundle.status === 'intended' ? `/bundles/${bundle.bundle._id}` : `/subscription/${bundle._id}`)
+  }
 
   return (
     <div className='w-full'>
@@ -60,9 +67,11 @@ const ActiveBundles = () => {
                 className={`w-full h-auto p-4 rounded-xl min-w-[230px] ${shadow}`}
                 key={i}
                 style={{ backgroundColor: bgColor }}
+                onClick={() => handleRoute(bundle)}
+
               >
                 <div className="">
-                  <span className='px-2 py-1 text-white text-xs rounded-xl bg-primary/30'>Active</span>
+                  <span className='px-2 py-1 text-white text-xs rounded-xl bg-primary/30'>{capitalizeFirstLetter(bundle.status === 'intended' ? "Draft" : bundle.status)}</span>
                   <h5 className={`text-base font-medium ${textColor}`}>{innerBundle.name}</h5>
                 </div>
 
