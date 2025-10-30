@@ -65,7 +65,15 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        {categories.map((c, i) => (
+        {categories.length > 2 ? categories.slice(0, 2).map((c, i) => (
+          <span
+            key={i}
+            className={`px-3 py-1 text-sm ${textColor} rounded-lg capitalize`}
+            style={{ backgroundColor: lightBg }}
+          >
+            {c}
+          </span>
+        )) : categories.map((c, i) => (
           <span
             key={i}
             className={`px-3 py-1 text-sm ${textColor} rounded-lg capitalize`}
@@ -116,7 +124,7 @@ const BundleCard: React.FC<BundleCardProps> = ({ bundle }) => {
             className={`text-xs font-medium px-2 py-1 rounded-md ${textColor}`}
             style={{ backgroundColor: lightBg }}
           >
-            {capitalizeFirstLetter(bundle?.status === 'intended' ? 'draft': bundle.status)}
+            {capitalizeFirstLetter(bundle?.status === 'intended' ? 'draft' : bundle.status)}
           </span>
         )}
       </div>
