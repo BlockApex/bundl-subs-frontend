@@ -29,7 +29,7 @@ const Features = () => {
                         </h2>
 
                         <p className="text-base text-foreground-web mt-2 lg:mt-0">
-                            Less Mess More Control, <br className='hidden lg:flex' /> No Surprises Renewals
+                            Less Mess More Control, <br className='hidden lg:flex' /> No Surprise Renewals
                         </p>
                     </div>
                     <div className="relative lg:absolute bottom-0 right-0">
@@ -77,7 +77,6 @@ const Features = () => {
 
                         <p className="text-base text-foreground-web mt-2 lg:mt-0 pe-6">
                             Skip the spreadsheet. See every subscription <br className='hidden lg:flex' />and bill in one place, whether you pay through Bundl or not.
-                            .
                         </p>
                     </div>
                     <div className="relative lg:absolute bottom-0 right-0">

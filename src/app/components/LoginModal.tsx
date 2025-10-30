@@ -65,7 +65,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, setOpen }) => {
                     className="mb-4"
                 />
                 <p className='text-base text-foreground text-center my-6'>
-                    Wallet is connect please sign a message to login
+                    Wallet is connected please sign a message to login
                 </p>
                 <Button loading={loading} variant='dark' size='full' onClick={handleLogin}>
                     Login

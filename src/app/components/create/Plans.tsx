@@ -58,7 +58,7 @@ const Plans: React.FC<PlansProps> = ({ onClick }) => {
                         return (
                             <div className={`w-full  min-h-[220px] lg:min-h-[300px] p-4 flex flex-col items-center justify-center gap-2 rounded-xl ${p.bg}`} key={i}>
                                 <p className='text-base text-foreground font-normal text-center '>
-                                    Upto
+                                    Up to
                                 </p>
                                 <h1 className='text-3xl lg:text-6xl  font-normal text-black text-center'>
                                     {p.title}

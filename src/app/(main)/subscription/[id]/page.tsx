@@ -26,7 +26,7 @@ const SubscriptionDetail = () => {
     const [cancelOpen, setCancelOpen] = useState(false);
 
     useEffect(() => {
-        const fettchSubscription = async () => {
+        const fetchSubscription = async () => {
             try {
                 setLoading(true);
                 const data = await getSubscriptionById(id);
@@ -42,7 +42,7 @@ const SubscriptionDetail = () => {
                 setLoading(false);
             }
         };
-        fettchSubscription();
+        fetchSubscription();
     }, [id, flag]);
 
 
@@ -91,13 +91,13 @@ const SubscriptionDetail = () => {
             setResumeOpen(false)
             setSubscription({ ...subscription, status: 'active' });
             // setFlag(!flag);
-            toast.success("Subscription has been resume successfully!");
+            toast.success("Subscription has been resumed successfully!");
         } catch (err: unknown) {
             if (err instanceof AxiosError) {
                 toast.error(err.response?.data?.message || "Failed to resume subscription");
                 return;
             }
-            toast.error((err as Error)?.message || "Something went wrong while resume");
+            toast.error((err as Error)?.message || "Something went wrong while resuming");
         } finally {
             setActionLoading(false);
         }
@@ -118,7 +118,7 @@ const SubscriptionDetail = () => {
                 toast.error(err.response?.data?.message || "Failed to cancel subscription");
                 return;
             }
-            toast.error((err as Error)?.message || "Something went wrong while cancel");
+            toast.error((err as Error)?.message || "Something went wrong while cancelling");
         } finally {
             setActionLoading(false);
         }

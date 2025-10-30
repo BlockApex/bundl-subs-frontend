@@ -52,7 +52,7 @@ const methods = [
     },
     {
         title: 'Yield Only',
-        text: 'Charge only from yield pause if insufficient ',
+        text: 'Charge only from yield, pause if insufficient',
         icon: <Sparkle />,
         disabled: true
     },
@@ -410,7 +410,7 @@ const handleSubscribe = async () => {
             />
             <br />
             <div className="w-full flex items-center justify-between border border-gray-300 p-4 rounded-xl">
-                <p className="text-base text-forefround">
+                <p className="text-base text-foreground">
                     You Pay
                 </p>
                 <h6 className="text-lg text-black">${bundle?.totalFirstDiscountedPrice}</h6>

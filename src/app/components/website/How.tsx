@@ -45,7 +45,7 @@ const steps = [
 
         </li>
         <li>
-          Yield-Only: Coming soon chip
+          Yield-Only: Coming soon
         </li>
       </ul>
     )

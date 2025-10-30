@@ -47,7 +47,7 @@ const Why = () => {
                         />
                         {/* Centered Text Overlay */}
                         <h1 className="absolute text-3xl lg:text-5xl font-normal text-black text-center pb-20">
-                            Why people Choose Bundl
+                            Why People Choose Bundl
                         </h1>
                     </div>
                     {/* Floating Feature Boxes */}
@@ -98,7 +98,7 @@ const Why = () => {
                 {/* Mobile Layout */}
                 <div className="flex flex-col items-center justify-start gap-6 md:hidden mt-6 p-4">
                     <h1 className='text-3xl lg:text-5xl font-normal text-black text-left'>
-                        Why people Choose Bundl
+                        Why People Choose Bundl
                     </h1>
                     <Image
                         src="/assets/landing/why/bg.png"
