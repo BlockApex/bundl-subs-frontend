@@ -23,8 +23,7 @@ export const getQuote = async (
         });
         return response.data;
     } catch (error) {
-        console.error(error);
-        throw new Error("Failed to fetch quote.");
+        throw error
     }
 };
 

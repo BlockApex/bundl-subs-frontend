@@ -11,9 +11,6 @@ import toast from "react-hot-toast";
 import { createBundle } from "@/app/services/bundle.service";
 import { CreateBundleRequest } from "@/app/types/bundle.types";
 
-// ---------- TYPES ----------
-
-
 // ---------- COMPONENT ----------
 const ReviewPage = () => {
   const router = useRouter();
@@ -66,9 +63,6 @@ const ReviewPage = () => {
       console.log(response)
       toast.success("Bundle created successfully!");
       router.push(`/payment/${response?._id}`)
-      setTimeout(()=>{
-              clearBundle();
-      },1000)
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message || "Failed to create bundle");

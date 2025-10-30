@@ -11,6 +11,9 @@ import { getActiveServices, getQuote } from "@/app/services/bundle.service";
 import { Spinner } from "../common/Spinner";
 import { Bundle, useBundleStore } from "@/app/store/bundleStore";
 import { categories } from "@/app/config";
+import ExpandableText from "../common/ExpandableText";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
 
 
@@ -29,7 +32,8 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
     const [loading, setLoading] = useState(true);
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [selectedPackages, setSelectedPackages] = useState<Record<string, string>>({});
-    const [_bundle, _setBundle] = useState<Bundle|null>(null);
+    const [_bundle, _setBundle] = useState<Bundle | null>(null);
+    const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -68,16 +72,33 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                 return;
             }
 
+
             const packagesPayload: QuoteRequest["selectedPackages"] = Object.entries(selectedPackages).map(
                 ([service, _package]) => ({ service, package: _package })
             );
-
+            setFetching(true);
             try {
                 const result = await getQuote(packagesPayload);
                 console.log(result)
                 _setBundle(result);
-            } catch (error) {
-                console.error("❌ Error fetching updated quote:", error);
+                setFetching(false);
+            } catch (error: unknown) {
+                if (error instanceof AxiosError) {
+                    setSelectedPackages(prev => {
+                        const keys = Object.keys(prev);
+                        if (keys.length === 0) return prev; // nothing to remove
+
+                        const lastKey = keys[keys.length - 1];
+                        const updated = { ...prev };
+                        delete updated[lastKey];
+                        return updated;
+                    });
+
+                    toast.error(error.response?.data?.message || "Something went wrong");
+                    return;
+                }
+                toast.error((error as Error)?.message || "Something went wrong");
+                setFetching(false);
             }
         };
 
@@ -185,9 +206,8 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                                         <h6 className="text-md font-normal text-black">
                                             {service.name}
                                         </h6>
-                                        <pre className="text-sm text-foreground font-normal  text-wrap">
-                                            {service.description}
-                                        </pre>
+                                        <ExpandableText text={service.description} charLimit={120} />
+
 
                                         <div className="flex items-center justify-start gap-2 my-2 flex-wrap">
                                             {service.category && (
@@ -285,8 +305,9 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                             variant="secondary"
                             size="sm"
                             className="flex items-center gap-2"
-                            disabled={!_bundle}
+                            disabled={!_bundle || fetching}
                             onClick={handleNavigateReview}
+
                         >
                             Review <MoveRight size={18} />
                         </Button>
