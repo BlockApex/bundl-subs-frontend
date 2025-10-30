@@ -1,5 +1,5 @@
 "use client";
-import { Check, ChevronLeft, ChevronRight, MoveRight, Plus, Search } from "lucide-react";
+import { Check, ChevronLeft, MoveRight, Plus, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import Input from "../common/Input";
@@ -47,7 +47,7 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
     }, []);
 
     const filteredServices = services.filter((s) => {
-        const matchesSearch = s.name?.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = s?.category.toLowerCase().includes(search?.toLowerCase()) || s.name?.toLowerCase().includes(search.toLowerCase());
         const matchesCategory =
             category.label === "All" ||
             s.category?.toLowerCase() === category.label.toLowerCase();
@@ -154,7 +154,7 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
             </section>
 
             {/* Services */}
-            <section className="w-full h-auto relative flex flex-col gap-3 p-4">
+            <section className="w-full h-[600px] overflow-scroll pb-16 lg:pb-20 relative flex flex-col gap-3 p-4">
                 {loading ? (
                     <div className="p-4 flex items-center justify-center">
                         <Spinner />
@@ -225,9 +225,9 @@ const MakeBundle: React.FC<MakeBundleProps> = ({ onClick }) => {
                                     </div>
 
                                     <div className="min-h-full">
-                                        <button className="text-foreground absolute top-4 right-4">
+                                        {/* <button className="text-foreground absolute top-4 right-4">
                                             <ChevronRight size={20} />
-                                        </button>
+                                        </button> */}
                                         <button
                                             onClick={() => handleAddClick(service)}
                                             className={`p-1 ${selectedPackages[service._id] ? 'bg-primary' : 'bg-dark'} rounded-md absolute bottom-4 right-4`}
