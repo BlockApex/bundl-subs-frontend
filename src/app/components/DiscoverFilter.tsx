@@ -35,7 +35,7 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({ open, setOpen, applyFil
 
 
     const handleFilter = () => {
-        const  filter = {
+        const filter = {
             category,
             perk,
             discount,
@@ -49,7 +49,7 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({ open, setOpen, applyFil
     const handleReset = async () => {
         setLoading(true);
         await delay(500);
-        const  filter = {
+        const filter = {
             category: { id: 1, label: 'All' },
             perk,
             discount,
@@ -69,16 +69,16 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({ open, setOpen, applyFil
                 <section className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
                         <button
-                            className={`${loading ? "slow-spin" : ''} w-10 h-10 rounded-full bg-dark flex items-center justify-center hover:bg-primary-100 transition`}
+                            className={`w-10 h-10 rounded-full bg-dark flex items-center justify-center hover:bg-primary-100 transition`}
 
                         >
                             <ChevronLeft className='text-white' />
                         </button>
-                        <h5 className='text-xl font-normal text-black'>
+                        <h5 className={`text-xl font-normal text-black`}>
                             Filter
                         </h5>
                     </div>
-                    <button onClick={handleReset}>
+                    <button className={`${loading ? "slow-spin" : ''}`} onClick={handleReset}>
                         <RefreshCw className='text-dark' />
                     </button>
                 </section>
