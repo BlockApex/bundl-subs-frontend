@@ -7,11 +7,12 @@ import { getUserStats } from '@/app/services/auth.service'
 import toast from 'react-hot-toast'
 import UserBalance from '@/app/components/UserBalance'
 import Link from 'next/link'
+import { UserStats } from '@/app/types/bundle.types'
 
 
 const WalletPage = () => {
     const [_loading, _setLoading] = useState<boolean>(true);
-    const [stats, setStats] = useState<any>(null);
+    const [stats, setStats] = useState<UserStats | null>(null);
 
     useEffect(() => {
         const fetchActivities = async () => {

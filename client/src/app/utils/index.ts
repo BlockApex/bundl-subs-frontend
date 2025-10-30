@@ -1,4 +1,4 @@
-import { Bundle, MyBundle, Subscription } from "../types/bundle.types";
+import { Bundle, Subscription } from "../types/bundle.types";
 
 export const isColorDark = (hex: string): boolean => {
   hex = hex.replace("#", "");

@@ -6,10 +6,11 @@ import ActiveBundles from './ActiveBundles';
 import toast from 'react-hot-toast';
 import { getUserStats } from '../services/auth.service';
 import { Spinner } from './common/Spinner';
+import { UserStats } from '../types/bundle.types';
 
 const UserHomeView = () => {
     const { isAuthenticated } = useAuthStore();
-    const [stats, setStats] = useState<any>(null);
+    const [stats, setStats] = useState<UserStats | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -32,7 +33,7 @@ const UserHomeView = () => {
         if (isAuthenticated) {
             fetchActivities();
         }
-    }, []);
+    }, [isAuthenticated]);
 
 
 
@@ -48,7 +49,9 @@ const UserHomeView = () => {
     }
     return (
         <div className='w-full h-auto relative p-2'>
-            <UserBalance lastData={stats?.lastPaymentDate} paymentsDueNext30Days={stats?.paymentsDueNext30Days} />
+            {stats ? (
+                <UserBalance lastData={stats?.lastPaymentDate} paymentsDueNext30Days={stats?.paymentsDueNext30Days} />
+            ) : ''}
             <br />
             <ActiveBundles />
         </div>

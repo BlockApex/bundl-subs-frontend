@@ -162,3 +162,14 @@ export interface ClaimPackagePayload {
         fieldValue: string;
     }[];
 }
+
+
+
+
+export interface UserStats {
+  activeSubscriptionsCount: number;
+  totalMonthlySavings: number;
+  totalMonthlySpending: number;
+  lastPaymentDate: string | null;
+  paymentsDueNext30Days: number;
+}

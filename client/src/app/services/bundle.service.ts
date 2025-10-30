@@ -114,7 +114,7 @@ export const getMyBundles = async () => {
     // Force-cast to keep compatibility with existing MyBundle[] type
     const subscriptions =
       Array.isArray(subsRes.data)
-        ? subsRes.data.map((s: any) => ({
+        ? subsRes.data.map((s: Subscription) => ({
             ...s,
             isSubscription: true,
           }))
@@ -139,7 +139,7 @@ export const recentActiveBundles = async () => {
         const response = await Api.get("/subscription");
         // ✅ Ensure response.data is an array
         const data = Array.isArray(response.data) ? response.data : [];
-        let filtered = data.filter((s)=>s.status === 'active');
+        const  filtered = data.filter((s)=>s.status === 'active');
         // ✅ Return only up to 3 items
         const recentBundles =  filtered.length > 3 ? filtered.slice(0, 3) : filtered;
 

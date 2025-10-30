@@ -1,12 +1,12 @@
 "use client";
-import { Sparkle } from "lucide-react";
+// import { Sparkle } from "lucide-react";
 import React from "react";
 import { useUsdcBalance } from "../hooks/useUsdcBalance";
 import { Spinner } from "./common/Spinner";
 import Image from "next/image";
 
 interface UserBalanceProps {
-  lastData: string;
+  lastData: string | null;
   paymentsDueNext30Days: number;
 }
 
