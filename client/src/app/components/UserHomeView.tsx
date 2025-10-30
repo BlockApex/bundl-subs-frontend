@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '../store/authStore';
 import UserBalance from './UserBalance';
 import ActiveBundles from './ActiveBundles';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import { getUserStats } from '../services/auth.service';
 import { Spinner } from './common/Spinner';
 import { UserStats } from '../types/bundle.types';
@@ -21,11 +21,12 @@ const UserHomeView = () => {
                 console.log(data);
                 setStats(data);
             } catch (err: unknown) {
-                toast.error(
-                    err instanceof Error
-                        ? err.message || "Failed to fetch stats"
-                        : "Failed to fetch stats"
-                );
+                console.log(err)
+                // toast.error(
+                //     err instanceof Error
+                //         ? err.message || "Failed to fetch stats"
+                //         : "Failed to fetch stats"
+                // );
             } finally {
                 setLoading(false);
             }

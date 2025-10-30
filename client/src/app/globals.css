@@ -6,8 +6,8 @@
   --primary: #00d5be;
   --primary-dark: #119576;
   --primary-50: #00bba733;
-  --primary-web:#F6754F;
-  --foreground-web:#364153;
+  --primary-web: #f6754f;
+  --foreground-web: #364153;
 
   --secondary: #ffc107;
   --secondary-dark: #ffbd15;
@@ -120,9 +120,6 @@ button {
   transform: translateY(-1px);
 }
 
-
-
-
 @keyframes marquee-smooth {
   0% {
     transform: translateX(0);
@@ -138,8 +135,6 @@ button {
   width: fit-content;
 }
 
-
-
 .section {
   position: sticky;
   top: 0;
@@ -148,4 +143,17 @@ button {
   justify-content: center;
   align-items: center;
   transition: transform 0.5s ease;
+}
+
+@keyframes slow-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.slow-spin {
+  animation: slow-spin 3s linear infinite;
 }

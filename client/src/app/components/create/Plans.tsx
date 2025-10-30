@@ -1,7 +1,8 @@
-import { ChevronRight, TrendingUp } from 'lucide-react'
+import { ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import { Button } from '../common/Button'
+import { useRouter } from 'next/navigation'
 
 const data = [
     {
@@ -26,11 +27,19 @@ interface PlansProps {
 }
 
 const Plans: React.FC<PlansProps> = ({ onClick }) => {
+    const router = useRouter()
+
     return (
         <div className='w-full relative'>
             <section className='w-full bg-dark rounded-b-xl px-4'>
                 <br />
-                <div className='flex items-center justify-center'>
+                <div className='flex items-center justify-start gap-3'>
+                    <button
+                        onClick={() => router.back()}
+                        className="w-10 h-10 rounded-full bg-dark-50 flex items-center justify-center hover:bg-primary-100 transition"
+                    >
+                        <ChevronLeft className="text-white" />
+                    </button>
                     <h5 className={`text-xl font-normal text-white`}>
                         Build your first Bundle
                     </h5>
@@ -78,9 +87,11 @@ const Plans: React.FC<PlansProps> = ({ onClick }) => {
                         </div>
                     </div>
                 </div>
-                <Button onClick={onClick} variant='dark' size='full' className='flex items-center gap-2 mt-6' >
+                <section className="w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center fixed bottom-2 left-0 right-0 p-2"> 
+                    <Button onClick={onClick} variant='dark' size='full' className='flex items-center gap-2 mt-6' >
                     Start Bundling  <ChevronRight size={18} />
                 </Button>
+                </section>
             </section>
         </div>
     )

@@ -8,7 +8,7 @@ const BundlePayment = () => {
     return (
         <main className="w-full min-h-screen relative overflow-hidden flex flex-col items-center justify-center gap-4">
             <PaymentHeader />
-                <PaymentForm />
+            <PaymentForm />
 
         </main>
     );

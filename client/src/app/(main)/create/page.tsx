@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react'
-import AppLayout from '../../components/common/AppLayout'
 import Plans from '../../components/create/Plans'
 import MakeBundle from '../../components/create/MakeBundle'
 
@@ -8,7 +7,6 @@ const CreateBundlePage = () => {
     const [formScreen, setFormScreen] = useState(false);
 
     return (
-        <AppLayout showTopbar={false}>
             <main className="w-full min-h-screen relative overflow-hidden pb-12">
                 {formScreen ? (
                     <MakeBundle onClick={() => setFormScreen(false)} />
@@ -17,7 +15,6 @@ const CreateBundlePage = () => {
                 )}
 
             </main>
-        </AppLayout>
     )
 }
 

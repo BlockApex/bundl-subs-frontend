@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { recentActiveBundles } from '@/app/services/bundle.service';
 import { Subscription } from '@/app/types/bundle.types';
 import { Spinner } from '@/app/components/common/Spinner';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import { capitalizeFirstLetter } from '../utils';
 
 const ActiveBundles = () => {
@@ -23,7 +23,7 @@ const ActiveBundles = () => {
         setBundles(data || []);
       } catch (err: unknown) {
         console.error(err);
-        toast.error("Failed to fetch active bundles");
+        // toast.error("Failed to fetch active bundles");
       } finally {
         setLoading(false);
       }

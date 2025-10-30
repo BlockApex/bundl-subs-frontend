@@ -29,7 +29,7 @@ export interface ClaimedPackage {
     }[];
     createdAt: string; // ISO date string
     updatedAt: string; // ISO date string
-    claimInstructions?:string;
+    claimInstructions?: string;
 }
 
 
@@ -125,7 +125,7 @@ export interface Subscription {
     updatedAt: string;
     tx: string;
     claimedPackages?: ClaimedPackage[]
-    isSubscription?:boolean;
+    isSubscription?: boolean;
 }
 
 
@@ -167,9 +167,20 @@ export interface ClaimPackagePayload {
 
 
 export interface UserStats {
-  activeSubscriptionsCount: number;
-  totalMonthlySavings: number;
-  totalMonthlySpending: number;
-  lastPaymentDate: string | null;
-  paymentsDueNext30Days: number;
+    activeSubscriptionsCount: number;
+    totalMonthlySavings: number;
+    totalMonthlySpending: number;
+    lastPaymentDate: string | null;
+    paymentsDueNext30Days: number;
+}
+
+
+
+
+export interface DiscoverFilterType {
+    category: { id: number; label: string };
+    perk: { id: number; label: string }| null;
+    discount: number;
+    min: string;
+    max: string;
 }

@@ -4,7 +4,7 @@ import AppLayout from '../../components/common/AppLayout'
 import { DollarSign, Sparkle, TrendingUp, Wallet2 } from 'lucide-react'
 import { Spinner } from '@/app/components/common/Spinner'
 import { getUserStats } from '@/app/services/auth.service'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import UserBalance from '@/app/components/UserBalance'
 import Link from 'next/link'
 import { UserStats } from '@/app/types/bundle.types'
@@ -22,11 +22,12 @@ const WalletPage = () => {
                 console.log(data);
                 setStats(data);
             } catch (err: unknown) {
-                toast.error(
-                    err instanceof Error
-                        ? err.message || "Failed to fetch stats"
-                        : "Failed to fetch stats"
-                );
+                console.log(err)
+                // toast.error(
+                //     err instanceof Error
+                //         ? err.message || "Failed to fetch stats"
+                //         : "Failed to fetch stats"
+                // );
             } finally {
                 _setLoading(false);
             }

@@ -98,7 +98,7 @@ const BundleDetail = () => {
     <main className="w-full min-h-screen relative overflow-hidden">
       <BundleDetailHeader bundle={bundle} />
       <BundleServices bundle={bundle} />
-      <div className='px-3 py-2 flex flex-col gap-2 items-center justify-center'>
+      <section className="w-full z-50 lg:max-w-3xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 fixed bottom-2 left-0 right-0 p-2">
         <Button
           onClick={handleShare}
           variant='secondary' size='full' className='gap-2'>
@@ -107,7 +107,7 @@ const BundleDetail = () => {
         <Button loading={_loading} onClick={handleRoute} variant='dark' size='full' className='flex items-center gap-2' >
           Subscribe <ChevronRight size={18} />
         </Button>
-      </div>
+      </section>
     </main>
   )
 }

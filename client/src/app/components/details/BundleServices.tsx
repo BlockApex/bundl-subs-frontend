@@ -16,7 +16,7 @@ const BundleServices = ({ bundle }: { bundle: Bundle }) => {
             <div className="flex items-center justify-between my-4">
                 <p className="text-base text-foreground font-normal">Included Services</p>
             </div>
-            <div className="w-full flex flex-col gap-4">
+            <div className="w-full h-[600px] lg:h-[500px] overflow-y-scroll flex flex-col gap-4">
                 {bundle.selectedPackages.map((pkg:BundleItem) => {
                     const service = pkg.service;
                     const plan = pkg.package;

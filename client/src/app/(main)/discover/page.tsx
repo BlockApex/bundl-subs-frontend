@@ -2,28 +2,57 @@
 import BundleCard from "@/app/components/BundleCard";
 import AppLayout from "@/app/components/common/AppLayout";
 import Input from "@/app/components/common/Input";
-import { categories } from "@/app/config";
-import { ChevronLeft, ListFilter, Search } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { getPresetBundles } from "@/app/services/bundle.service";
 import { Spinner } from "@/app/components/common/Spinner";
-import { Bundle, BundleItem } from "@/app/types/bundle.types";
+import { Bundle, BundleItem, DiscoverFilterType } from "@/app/types/bundle.types";
 import DiscoverFilter from "@/app/components/DiscoverFilter";
 
 const Discover = () => {
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState(categories[0]);
+    const [categories, setCategories] = useState<{ id: number, label: string }[]>([])
+    // const [category, setCategory] = useState<{ id: number, label: string }>({ id: 1, label: "All" });
     const [bundles, setBundles] = useState<Bundle[]>([]);
     const [loading, setLoading] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
+    const [filter, setFilter] = useState<DiscoverFilterType>({
+        category: { id: 1, label: 'All' },
+        perk: null,
+        discount: 0,
+        min: '',
+        max: ''
+    })
 
     useEffect(() => {
         const fetchBundles = async () => {
             try {
                 setLoading(true);
                 const data = await getPresetBundles();
+                const categoriesArr = Array.from(
+                    new Set(
+                        data
+                            .flatMap((bundle) =>
+                                bundle.selectedPackages.map(
+                                    (pkg) =>
+                                        pkg.service.category &&
+                                        pkg.service.category.charAt(0).toUpperCase() +
+                                        pkg.service.category.slice(1).toLowerCase()
+                                )
+                            )
+                            .filter((cat): cat is string => Boolean(cat)) // ✅ removes null/undefined safely
+                    )
+                );
+                const categories = [
+                    { id: 1, label: "All" },
+                    ...categoriesArr.map((cat, index) => ({
+                        id: index + 2,
+                        label: cat,
+                    })),
+                ];
+                setCategories(categories)
                 setBundles(data);
             } catch (err: unknown) {
                 if (err instanceof Error) {
@@ -41,17 +70,48 @@ const Discover = () => {
 
     // ✅ Apply search + category filters
     const filteredBundles = bundles.filter((bundle) => {
-        const matchesSearch =
-            bundle.name.toLowerCase().includes(search.toLowerCase());
+        const searchLower = search.toLowerCase();
 
-        const matchesCategory =
-            category.label === "All" ||
+        // Match bundle name, service name, or package name
+        const matchesSearch =
+            bundle.name.toLowerCase().includes(searchLower) ||
             bundle.selectedPackages.some(
-                (pkg: BundleItem) => pkg.service.category.toLowerCase() === category.label.toLowerCase()
+                (pkg: BundleItem) =>
+                    pkg.service.name.toLowerCase().includes(searchLower) ||
+                    pkg.package.name.toLowerCase().includes(searchLower)
             );
 
-        return matchesSearch && matchesCategory;
+        // Match category filter
+        const matchesCategory =
+            filter?.category.label === "All" ||
+            bundle.selectedPackages.some(
+                (pkg: BundleItem) =>
+                    pkg.service.category?.toLowerCase() ===
+                    filter.category.label.toLowerCase()
+            );
+
+  // 3️⃣ Match price range filter (fixed)
+  const total = Number(bundle.totalFirstDiscountedPrice) || 0;
+  const min = Number(filter.min);
+  const max = Number(filter.max);
+
+  // ✅ Only filter if min or max are not both zero or empty
+  const shouldApplyPriceFilter =
+    (!!filter.min && filter.min !== "0") || (!!filter.max && filter.max !== "0");
+
+  const matchesPrice = shouldApplyPriceFilter
+    ? total >= (isNaN(min) ? 0 : min) && total <= (isNaN(max) ? Infinity : max || Infinity)
+    : true;
+
+        return matchesSearch && matchesCategory && matchesPrice;
     });
+
+
+    const applyFilter = (filter: DiscoverFilterType) => {
+        console.log(JSON.stringify(filter))
+        setFilter(filter);
+    }
+
 
     return (
         <AppLayout showTopbar={false}>
@@ -60,12 +120,12 @@ const Discover = () => {
                     <br />
                     <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                            <button
+                            {/* <button
                                 // onClick={onClick}
                                 className="w-10 h-10 rounded-full bg-dark-50 flex items-center justify-center hover:bg-primary-100 transition"
                             >
                                 <ChevronLeft className="text-white" />
-                            </button>
+                            </button> */}
                             <h5 className="text-xl font-normal text-white">Discover</h5>
                         </div>
                         <Link href="/create" className="text-base text-primary">
@@ -93,8 +153,8 @@ const Discover = () => {
                             {categories.map((c) => (
                                 <button
                                     key={c.id}
-                                    onClick={() => setCategory(c)}
-                                    className={`whitespace-nowrap px-4 py-2 rounded-xl border transition-all ${category.id === c.id
+                                    onClick={() => setFilter({ ...filter, category: c })}
+                                    className={`whitespace-nowrap px-4 py-2 rounded-xl border transition-all ${filter.category.id === c.id
                                         ? "bg-primary/60 border-primary text-black"
                                         : "border-white text-white hover:bg-primary/20"
                                         }`}
@@ -120,7 +180,9 @@ const Discover = () => {
                         <p className="text-center text-gray-400">No bundles found</p>
                     )}
                 </div>
-                <DiscoverFilter open={filterOpen} setOpen={setFilterOpen} />
+                <DiscoverFilter
+                    categories={categories}
+                    applyFilter={applyFilter} open={filterOpen} setOpen={setFilterOpen} />
             </main>
         </AppLayout>
     );
