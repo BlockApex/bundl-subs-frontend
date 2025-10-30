@@ -14,7 +14,7 @@ import { CreateBundleRequest } from "@/app/types/bundle.types";
 // ---------- COMPONENT ----------
 const ReviewPage = () => {
   const router = useRouter();
-  const { bundle, clearBundle } = useBundleStore();
+  const { bundle } = useBundleStore();
 
   const [name, setName] = useState("");
   const [shade, setShade] = useState("");
