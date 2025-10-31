@@ -142,7 +142,7 @@ const How = () => {
           </p>
           <Image src='/assets/landing/how/icons.svg' alt="icons" width={100} height={80} />
           <br className="block lg:hidden" />
-          <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+          <Link href='/app'>
             <Button>
               Connect Now
             </Button>

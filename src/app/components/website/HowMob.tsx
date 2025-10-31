@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Button from "./Button";
+import Link from "next/link";
 
 const steps = [
   {
@@ -67,7 +68,9 @@ const HowMob = () => {
         <h1 className="text-3xl font-semibold text-black">How Bundl Works</h1>
         <p className="text-base text-foreground-web">No new Accounts, Just your Wallet</p>
         <Image src="/assets/landing/how/icons.svg" alt="icons" width={120} height={80} />
-        <Button>Connect Now</Button>
+        <Link href='/app'>
+               <Button>Connect Now</Button>
+        </Link>
       </section>
 
       {/* Steps */}

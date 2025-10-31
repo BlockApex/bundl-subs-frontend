@@ -29,7 +29,7 @@ const Navbar = () => {
                         </Link>
                     </section>
                     <section>
-                        <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+                        <Link href='/app'>
                             <Button>
                                 Launch dApp
                             </Button>

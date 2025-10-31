@@ -13,7 +13,7 @@ const Features = () => {
                     Unify your subscriptions.
                 </h1>
                 <br className='block lg:hidden' />
-                <Link href='https://forms.gle/YRug8xQ4jK5mH1PL7' target='_blank'>
+                <Link href='/app'>
 
                     <Button>
                         Launch dApp
