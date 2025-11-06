@@ -45,5 +45,44 @@ export const getUserStats = async () => {
 };
 
 
+export const getUserProfile = async () => {
+    try {
+        const response = await Api.get("/user/kyc-info");
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
 
 
+
+export const uploadImage = async (image: File) => {
+    try {
+        const formData = new FormData();
+        formData.append("file", image);
+
+        const response = await Api.post("/user/upload-image", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+export const updateProfile = async (info: { name: string, email: string, profileImage?: string, country: string }) => {
+    const  data = {
+        kycInfo: { ...info }
+    }
+    try {
+        const response = await Api.put("/user/kyc-info", data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

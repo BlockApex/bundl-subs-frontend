@@ -8,6 +8,7 @@ import { getUserStats } from '@/app/services/auth.service'
 import UserBalance from '@/app/components/UserBalance'
 import Link from 'next/link'
 import { UserStats } from '@/app/types/bundle.types'
+// import RecentCards from '@/app/components/RecentCards'
 
 
 const WalletPage = () => {
@@ -92,6 +93,7 @@ const WalletPage = () => {
                         <span className='bg-primary-dark px-3 py-1 rounded-full text-white'>Join Waitlist</span>
                     </Link>
                 </div>
+                {/* <RecentCards /> */}
                 <div className="w-full flex items-stretch justify-between gap-4 mt-6">
                     <div className="flex-1 border border-gray-300 rounded-xl flex flex-col items-start gap-2 p-4">
                         <DollarSign className="text-danger" />
