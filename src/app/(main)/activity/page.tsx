@@ -103,13 +103,6 @@ const ActivityPage = () => {
         );
     }
 
-    if (!activities.length) {
-        return (
-            <div className="w-full min-h-screen text-center py-8 text-gray-500">
-                No activity available.
-            </div>
-        );
-    }
 
 
 
@@ -127,10 +120,17 @@ const ActivityPage = () => {
                     </h5>
                 </div>
 
+                <section className="w-full mt-4">
+                    {!activities.length ? (
+                        <div className="w-full min-h-screen text-center py-8 text-gray-500">
+                            No activity available.
+                        </div>
+                    ) : ''}
+                </section>
                 {/* Activity List */}
                 <section className="w-full mt-4">
                     <div className="flex flex-col gap-3 h-[700px] lg:h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent pr-1">
-                        {activities.map((item, idx) => {
+                        {activities && activities.length && activities.map((item, idx) => {
                             const bundle = item.bundle;
                             const firstPackage = bundle.selectedPackages[0];
                             const formattedDate = dayjs(item.date).format("DD MMM YYYY");
