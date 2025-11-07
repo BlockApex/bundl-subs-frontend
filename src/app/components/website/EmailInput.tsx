@@ -2,26 +2,34 @@
 import React, { useState } from 'react'
 import Button from './Button'
 import toast from 'react-hot-toast';
+import { waitlist } from '@/app/services/auth.service';
+import { AxiosError } from 'axios';
 
 const EmailInput = () => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
         if (!email.trim()) {
             toast.error("Please enter a valid email address");
             return;
         }
-
-        setIsSubmitting(true);
-
-        // Simulate a network request
-        setTimeout(() => {
+        try {
+            setIsSubmitting(true);
+            await waitlist(email);
             setIsSubmitting(false);
             toast.success("🎉 You’ve been added to the waitlist!");
             setEmail("");
-        }, 1200);
+        } catch (err: unknown) {
+            if (err instanceof AxiosError) {
+                toast.error(err.response?.data?.message || "Something went wrong");
+                return;
+            }
+            toast.error((err as Error)?.message || "Something went wrong");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
     return (
         <div
@@ -40,7 +48,7 @@ const EmailInput = () => {
         >
             <input
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter Email"
                 className="
       flex-1 

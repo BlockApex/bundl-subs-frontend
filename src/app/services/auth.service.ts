@@ -76,11 +76,24 @@ export const uploadImage = async (image: File) => {
 
 
 export const updateProfile = async (info: { name: string, email: string, profileImage?: string, country: string }) => {
-    const  data = {
+    const data = {
         kycInfo: { ...info }
     }
     try {
         const response = await Api.put("/user/kyc-info", data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const waitlist = async (email: string) => {
+    const data = {
+        email
+    }
+    try {
+        const response = await Api.post("/waitlist", data);
         return response.data;
     } catch (error) {
         throw error;

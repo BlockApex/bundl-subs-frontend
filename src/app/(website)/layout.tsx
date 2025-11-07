@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "../globals.css"; // still include global styles if needed
+import Script from "next/script";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -21,9 +22,25 @@ export default function LandingLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+        </Script>
+
+      </head>
       <body className={`${poppins.variable} antialiased font-body`}>
         <main className="w-full min-h-screen bg-white">
-            {children}
+          {children}
         </main>
       </body>
     </html>
