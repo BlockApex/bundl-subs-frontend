@@ -1,11 +1,14 @@
 "use client"
 import { Button } from '@/app/components/common/Button'
 import Input from '@/app/components/common/Input'
+import NotLoggedIn from '@/app/components/common/NotLoggedIn'
 import { Select } from '@/app/components/common/Select'
 import { Spinner } from '@/app/components/common/Spinner'
+import Wallet from '@/app/components/common/Wallet'
 import { ProfileImageUploader } from '@/app/components/ProfileImageUploader'
 import { BASE_URL } from '@/app/config'
 import { getUserProfile, updateProfile, uploadImage } from '@/app/services/auth.service'
+import { useAuthStore } from '@/app/store/authStore'
 import { countries } from '@/app/utils/countries'
 import { ChevronLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -13,6 +16,8 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
+    const { isAuthenticated } = useAuthStore();
+    
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -123,6 +128,15 @@ const ProfilePage = () => {
         getProfile();
     }, []);
 
+    if(!isAuthenticated){
+        return  (
+            <div className='w-full h-screen flex flex-col items-center justify-center'>
+                <NotLoggedIn/>
+                <br/>
+                <Wallet />
+            </div>
+        )
+    }
     return (
         <main className="w-full min-h-screen relative overflow-hidden pb-12">
             <section className='w-full px-4'>
