@@ -6,6 +6,7 @@ import { useAuthStore } from '@/app/store/authStore';;
 import toast from 'react-hot-toast';
 import LoginModal from '../LoginModal';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { Api } from '@/app/config';
 
 const Wallet = () => {
     const { publicKey, disconnect, connected } = useWallet();
@@ -18,6 +19,8 @@ const Wallet = () => {
         try {
             await disconnect();
             setAuthenticated(false);
+            delete Api.defaults.headers.common["Authorization"];
+            localStorage.removeItem("token");
             toast.success('Logged out successfully.');
         } catch (error) {
             console.log(error)

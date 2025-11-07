@@ -2,11 +2,15 @@
 import AppLayout from "@/app/components/common/AppLayout";
 import { Spinner } from "@/app/components/common/Spinner";
 import { getUserActivity } from "@/app/services/auth.service";
+import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
+import { useAuthStore } from "@/app/store/authStore";
+import NotLoggedIn from "@/app/components/common/NotLoggedIn";
+import Wallet from "@/app/components/common/Wallet";
 
 interface ActivityItem {
     bundle: {
@@ -28,7 +32,7 @@ interface ActivityItem {
             };
         }[];
     };
-    amount:number;
+    amount: number;
     date: string;
     text: string;
     status: string;
@@ -43,8 +47,11 @@ const statusColors: Record<string, string> = {
 };
 
 const ActivityPage = () => {
+    const { isAuthenticated } = useAuthStore();
+
+    const router = useRouter();
     const [activities, setActivities] = useState<ActivityItem[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchActivities = async () => {
@@ -62,8 +69,31 @@ const ActivityPage = () => {
                 setLoading(false);
             }
         };
-        fetchActivities();
-    }, []);
+        if (isAuthenticated) {
+            fetchActivities();
+        }
+    }, [isAuthenticated]);
+
+
+    if (!isAuthenticated) {
+        return (
+            <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden px-4 pb-24">
+                <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
+                    <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+                        <ChevronLeft className="text-white" />
+                    </button>
+                    <h5 className="text-xl font-semibold text-gray-900">
+                        Activity
+                    </h5>
+                </div>
+                <div className="w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center">
+                    <NotLoggedIn />
+                    <br />
+                    <Wallet />
+                </div>
+            </main>
+        )
+    }
 
     if (loading) {
         return (
@@ -81,12 +111,15 @@ const ActivityPage = () => {
         );
     }
 
+
+
+
     return (
         <AppLayout showTopbar={false}>
             <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden px-4 pb-24">
                 {/* Header */}
                 <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
-                    <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+                    <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
                         <ChevronLeft className="text-white" />
                     </button>
                     <h5 className="text-xl font-semibold text-gray-900">

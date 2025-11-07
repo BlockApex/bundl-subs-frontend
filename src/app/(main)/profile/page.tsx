@@ -125,16 +125,28 @@ const ProfilePage = () => {
                 setLoading(false);
             }
         };
-        getProfile();
-    }, []);
+        if(isAuthenticated){
+          getProfile();
+        }
+    }, [isAuthenticated]);
 
-    if(!isAuthenticated){
-        return  (
-            <div className='w-full h-screen flex flex-col items-center justify-center'>
-                <NotLoggedIn/>
-                <br/>
-                <Wallet />
-            </div>
+    if (!isAuthenticated) {
+        return (
+            <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden px-4 pb-24">
+                <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
+                    <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+                        <ChevronLeft className="text-white" />
+                    </button>
+                    <h5 className="text-xl font-semibold text-gray-900">
+                        Profile
+                    </h5>
+                </div>
+                <div className="w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center">
+                    <NotLoggedIn />
+                    <br />
+                    <Wallet />
+                </div>
+            </main>
         )
     }
     return (

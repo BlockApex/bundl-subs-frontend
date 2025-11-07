@@ -39,7 +39,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, setOpen }) => {
             const publicKeyBase58 = publicKey.toBase58();
             const signatureBase58 = bs58.encode(signature);
             const authResponse = await login(publicKeyBase58, signatureBase58);
-
+            localStorage.setItem('token' , authResponse.token)
             console.log('✅ Auth response:', authResponse);
             setAuthenticated(true);
             setOpen(false);

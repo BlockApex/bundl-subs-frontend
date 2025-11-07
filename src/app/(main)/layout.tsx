@@ -9,6 +9,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
 // import PWARegister from "../components/PwaRegister";
 import SplashScreen from "../components/common/Splash";
+import AppRefresh from "../components/common/AppRefresh";
 
 
 
@@ -82,6 +83,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased font-body`}>
         <SplashScreen>
           {/* <PWARegister /> */}
+          <AppRefresh/>
           <NextTopLoader color="#00d5be" height={5} />
           <SolanaWalletProvider>
             <Container>

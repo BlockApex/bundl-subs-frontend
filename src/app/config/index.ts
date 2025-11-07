@@ -12,13 +12,21 @@ export const SOLANA_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC || 'https://api.dev
 
 export const Api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   }
 });
 
-
+Api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // or from Zustand / Redux
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 
 export const categories = [
